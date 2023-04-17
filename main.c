@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 13:37:40 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/17 13:46:38 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	ft_read_prompt(void)
 				rl_redisplay();
 			}
 			write(1, "exit\n", 5);
+			clear_history();
 			exit(0);
 		}
 		add_history(str);
