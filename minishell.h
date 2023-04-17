@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 13:40:57 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/17 14:08:07 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,5 @@ typedef struct s_term
 t_term	g_term_attr;
 
 void	ft_parse_input(char *in_put);
+int		ft_set_terminal(void);
+void	ft_quit_ignore(int sig);
