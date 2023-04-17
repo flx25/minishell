@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 15:12:35 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/17 15:30:34 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,9 @@ int	ft_closing_qoutes(char *in_put)
 
 
 /* Used to display the prompt and read the input from the user */
-int	ft_read_prompt(void)
+int	ft_read_prompt(char **envp)
 {
 	char	*str;
-
 	while (true)
 	{
 		str = readline(PROMPT);
@@ -65,17 +64,21 @@ int	ft_read_prompt(void)
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			return (0);
-		ft_parse_input(str);
+		ft_parse_input(str, envp); //replace envp with our own somewhere along the way
+
 		free(str);
+		//free cmds somewhere
 	}
 }
 
 // int	main(int argc, char **argv, char **envp)
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
+	(void) argv;
+	(void) argc;
 	signal(SIGINT, ft_quit_ignore);
 	signal(SIGQUIT, SIG_IGN);
 	if (ft_set_terminal())
 		exit(1);
-	ft_read_prompt();
+	ft_read_prompt(envp);
 }

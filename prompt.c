@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 14:35:12 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/17 15:25:18 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ t_cmds	*ft_parser(char *in_put)
 	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char]);
 	ft_get_args(cmd, in_put);
 	ft_after_redirect(cmd);
+	//expand_env(cmd->args, envp); //need to add own envp
 	return (cmd);
 }
 
@@ -278,12 +279,13 @@ t_cmds	*ft_many_cmd(char *in_put)
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
-void	ft_parse_input(char *in_put)
+void	ft_parse_input(char *in_put, char **envp)
 {
 	t_cmds	*cmd;
 	t_cmds	*tmp;
 	int		count;
 
+	(void) envp;
 	count = 0;
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
@@ -297,6 +299,7 @@ void	ft_parse_input(char *in_put)
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;
+
 	while (tmp)
 	{
 		count = 0;
