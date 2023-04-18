@@ -6,25 +6,29 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 08:59:36 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/18 11:06:18 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <stdbool.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include <unistd.h>
-#include <termios.h>
-#include "./Libft/libft.h"
-#define PROMPT "\033[35mminihell\033[36m$\033[0m "
-#define INPUT 1
-#define HEREDOC 2
-#define OUTPUT 4
-#define APPEND 8
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <string.h>
+# include <unistd.h>
+# include <termios.h>
+# include <sys/stat.h>
+# include "./Libft/libft.h"
+# define PROMPT "\033[35mminihell\033[36m$\033[0m "
+# define INPUT 1
+# define HEREDOC 2
+# define OUTPUT 4
+# define APPEND 8
 
 /* Node to store the commands in a linked list */
 typedef struct s_cmds
@@ -60,3 +64,5 @@ t_term	g_term_attr;
 void	ft_parse_input(char *in_put, char **envp);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
+
+#endif
