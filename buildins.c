@@ -6,13 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 10:59:54 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/18 11:10:05 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	cd(char **args) //most likely needs exit codes too, return on error
+int	ft_cd(char **args)
 {
 	struct stat	st;
 
@@ -34,7 +34,7 @@ int	cd(char **args) //most likely needs exit codes too, return on error
 	return (0);
 }
 
-int	env(char **envp)
+int	ft_env(char **envp)
 {
 	while (*envp != NULL)
 	{
@@ -44,7 +44,7 @@ int	env(char **envp)
 	return (0);
 }
 
-int	echo(char **args)
+int	ft_echo(char **args)
 {
 	int	i;
 	int	nl;
@@ -73,11 +73,11 @@ int	echo(char **args)
 	return (0);
 }
 
-int	pwd(void)
+int	ft_pwd(void)
 {
 	char	*pwd;
 
-	pwd = malloc(1024 * sizeof(char));
+	pwd = ft_calloc(1024, sizeof(char));
 	if (!pwd)
 		return (1);
 	pwd = getcwd(NULL, 0);
