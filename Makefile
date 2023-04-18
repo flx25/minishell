@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/18 08:59:24 by fvon-nag         ###   ########.fr        #
+#    Updated: 2023/04/18 14:53:17 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,9 @@
 SOURCES = main.c \
 			prompt.c \
 			signals.c \
+			syscommands.c \
+			syscommands_utils.c \
+
 
 
 

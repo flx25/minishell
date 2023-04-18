@@ -6,13 +6,14 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 09:47:30 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 10:19:14 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/18 14:53:23 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*mkpathcommand(char *path, char *command)
+
+char	*ft_mkpathcommand(char *path, char *command)
 {
 	char	*temp;
 	char	*out;
@@ -23,7 +24,7 @@ char	*mkpathcommand(char *path, char *command)
 	return (out);
 }
 
-int	checkpaths(char *command, char **paths)
+int	ft_checkpaths(char *command, char **paths)
 {
 	int		i;
 	char	*pathcommand;
@@ -31,7 +32,7 @@ int	checkpaths(char *command, char **paths)
 	i = 0;
 	while (paths[i])
 	{
-		pathcommand = mkpathcommand(paths[i], command);
+		pathcommand = ft_mkpathcommand(paths[i], command);
 		if (access(pathcommand, X_OK) == 0)
 			return (free(pathcommand), i);
 		free(pathcommand);
@@ -40,7 +41,7 @@ int	checkpaths(char *command, char **paths)
 	return (-1);
 }
 
-char	**getpaths(char **envp)
+char	**ft_getpaths(char **envp)
 {
 	int		i;
 	char	**out;
@@ -52,41 +53,30 @@ char	**getpaths(char **envp)
 	return (out);
 }
 
-void	convertsyscommands(char ***input, char **envpa)
+void	ft_convertsyscommands(t_cmds *cmd, char **envp)
 {
 	int		i;
 	char	**paths;
 	int		pathnum;
 	char	*temp;
+	t_cmds	*tmp;
 
 	i = 0;
-	paths = getpaths(envp);
-	while (i < data.cmdnum)
+	paths = ft_getpaths(envp);
+	tmp = cmd;
+	while (tmp)
 	{
-		if (!iscommand(input[i][0], &data))
+		if (!ft_isnonsyscommand(tmp->cmd))
 		{
-			pathnum = checkpaths(input[i][0], paths);
+			pathnum = ft_checkpaths(tmp->cmd, paths);
 			if (pathnum >= 0)
 			{
-				temp = mkpathcommand(paths[pathnum], input[i][0]);
-				free(input[i][0]);
-				input[i][0] = temp;
+				temp = ft_mkpathcommand(paths[pathnum], tmp->cmd);
+				//do not think i need to free anything because linked list (true?)
+				tmp->cmd = temp;
 			}
 		}
-		i++;
+		tmp = tmp->next;
 	}
-	freepaths(paths);
-}
-
-void	freepaths(char **paths)
-{
-	int	i;
-
-	i = 0;
-	while (paths[i] != NULL)
-	{
-		free(paths[i]);
-		i++;
-	}
-	free(paths);
+	ft_freepaths(paths);
 }

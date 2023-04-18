@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 11:06:18 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/18 14:52:57 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,12 @@ t_term	g_term_attr;
 void	ft_parse_input(char *in_put, char **envp);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
+void	ft_convertsyscommands(t_cmds *cmd, char **envp);
+char	**ft_getpaths(char **envp);
+int		ft_checkpaths(char *command, char **paths);
+void	ft_freepaths(char **paths);
+int		ft_issyscommand(char *cmd, char **envp);
+int		ft_strcmp(char *s1, char *s2);
+int		ft_isnonsyscommand(char *arg);
 
 #endif
