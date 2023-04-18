@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/18 00:50:02 by melkholy         ###   ########.fr        #
+#    Updated: 2023/04/18 08:59:24 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,7 @@
 SOURCES = main.c \
 			prompt.c \
 			signals.c \
-			expand_env_isinquotes.c \
-			expand_env.c \
-			ft_strncpy.c \
+
 
 
 

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 01:19:12 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/18 08:59:36 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,3 @@ t_term	g_term_attr;
 void	ft_parse_input(char *in_put, char **envp);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
-void	expand_env(char **args, char **envp);
-int		ft_isqe(char const *s, int in);
-int		ft_isdqe(char const *s, int in);
-int		ft_issqe(char const *s, int in);
-char	*ft_strncpy(char *dest, char *src, unsigned int n);
