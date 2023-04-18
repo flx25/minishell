@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 15:25:06 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/18 01:19:12 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,14 @@ typedef struct s_cmds
 	int				skip_char;
 	struct s_cmds	*next;
 }				t_cmds;
+
+typedef struct s_env
+{
+	int				index;
+	char			*var;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
 
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
