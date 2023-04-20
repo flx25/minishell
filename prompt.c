@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/20 14:02:47 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 14:13:04 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,7 +295,7 @@ t_env	*ft_create_envnode(char *envp, int index)
 	return (node);
 }
 
-t_env	*ft_get_envp(char **envp)
+t_env	*ft_get_envp(char **envp, int *inited)
 {
 	int		count;
 	t_env	*head;
@@ -313,6 +313,7 @@ t_env	*ft_get_envp(char **envp)
 			return (NULL);
 		tmp = tmp->next;
 	}
+	*inited = 1;
 	return (head);
 }
 
@@ -395,16 +396,18 @@ char	*ft_check_expand(char *in_put, t_env *env_list)
  just one command in a node */
 void	ft_parse_input(char *in_put, char **envp)
 {
-	t_cmds	*cmd;
-	t_cmds	*tmp;
-	t_env	*env_list;
-	int		count;
+	t_cmds			*cmd;
+	t_cmds			*tmp;
+	static t_env	*env_list;
+	int				count;
+	static int		env_listinit;
 
 	count = 0;
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	env_list = ft_get_envp(envp); //only should run one time, in order for custom variables to work
+	if (!env_listinit)
+		env_list = ft_get_envp(envp, &env_listinit);
 	in_put = ft_check_expand(in_put, env_list);
 	if (ft_strchr(&in_put[count], '|'))
 		cmd = ft_many_cmd(&in_put[count], env_list);

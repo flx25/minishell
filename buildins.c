@@ -6,12 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/20 13:03:08 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 15:34:31 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//need to set the _= envoirment variable to the last executed programm
 int	ft_cd(char **args)
 {
 	struct stat	st;
@@ -41,7 +42,8 @@ int	ft_env(t_env *envp)
 	tmp = envp;
 	while (tmp)
 	{
-		printf("%s=%s\n", tmp->var, tmp->value);
+		if (tmp->var && tmp->value)
+			printf("%s=%s\n", tmp->var, tmp->value);
 		if (tmp->next)
 			tmp = tmp->next;
 		else
