@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 02:31:08 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/20 09:46:09 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,11 +285,11 @@ t_env	*ft_create_envnode(char *envp, int index)
 	char	**str;
 
 	node = (t_env *)ft_calloc(sizeof(t_env), 1);
-	if(!node)
+	if (!node)
 		return (NULL);
 	str = ft_split(envp, '=');
-	node->var = strdup(str[0]);
-	node->value = strdup(str[1]);
+	node->var = ft_strdup(str[0]);
+	node->value = ft_strdup(str[1]);
 	node->index = index;
 	ft_free_dstr(str);
 	return (node);
@@ -433,4 +433,5 @@ void	ft_parse_input(char *in_put, char **envp)
 			printf("To_file: %s\n", tmp->to_file);
 		tmp = tmp->next;
 	}
+	export(cmd->args, env_list);
 }

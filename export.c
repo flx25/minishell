@@ -6,11 +6,30 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/19 09:54:13 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 09:42:16 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_addnewnode(char *arg, t_env *tmp)
+{
+	t_env	*node;
+	char	*varname;
+	char	*varvalue;
+
+	node = (t_env *)ft_calloc(sizeof(t_env), 1);
+	if (!node)
+		return ;
+	varname = ft_getvarname(arg);
+	varvalue = ft_getvarvalue(arg);
+	node->var = ft_strdup(varname);
+	node->value = ft_strdup(varvalue);
+	node->index = tmp->index + 1;
+	tmp->next = node;
+	free(varname);
+	free(varvalue);
+}
 
 char	*ft_getvarname(char *arg)
 {
@@ -22,20 +41,58 @@ char	*ft_getvarname(char *arg)
 		i++;
 	if (!arg[i])
 		return (NULL);
+	out = ft_calloc(i +1, sizeof(char));
+	i = 0;
+	while (arg[i] != '=')
+		out[i++] = arg[i];
+	return (out);
+}
 
+char	*ft_getvarvalue(char *arg)
+{
+	int		i;
+	char	*out;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	if (!arg[i])
+		return (NULL);
+	out = ft_calloc(ft_strlen(arg) - i, sizeof(char));
+	while (arg[i])
+		out[i++] = arg[i];
+	return (out);
 }
 
 void	ft_export(char **args, t_env *envp)
 {
 	t_env	*tmp;
 	int		i;
-	//get first part of the arg as char * and second part of the arg as char* -> seperated by =
-	//e.g. Arg 0: Test=ERST Arg 1: Test2=ZWEIT
+	char	*varname;
+	char	*varvalue;
+
 	i = 0;
 	tmp = envp;
-	while (tmp)
+	while (args[i++])
 	{
-		if (ft_strcmp(tmp->var))
+		while (tmp)
+		{
+			varname = ft_getvarname(args[i]);
+			if (!ft_strcmp(tmp->var, varname))
+			{
+				varvalue = ft_getvarvalue(args[i]);
+				ft_strlcpy(tmp->value, varvalue, ft_strlen(varvalue) + 1); //maybe simply assign string to linked list, no free
+				free(varvalue);
+				free(varname);
+				break ;
+			}
+			free(varname);
+			if (!tmp->next)
+				break ;
+			tmp = tmp->next;
+		}
+		if (tmp->next == NULL)
+			ft_addnewnode(args[i], tmp);
+		tmp = envp;
 	}
-
 }
