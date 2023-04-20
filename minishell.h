@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/20 09:43:10 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:03:22 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,6 @@ int		ft_issyscommand(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
 void	ft_export(char **args, t_env *envp);
+int		ft_env(t_env *envp);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 11:10:05 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:03:08 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,18 @@ int	ft_cd(char **args)
 	return (0);
 }
 
-int	ft_env(char **envp)
+int	ft_env(t_env *envp)
 {
-	while (*envp != NULL)
+	t_env	*tmp;
+
+	tmp = envp;
+	while (tmp)
 	{
-		printf("%s\n", *envp);
-		envp++;
+		printf("%s=%s\n", tmp->var, tmp->value);
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return (0);
 	}
 	return (0);
 }

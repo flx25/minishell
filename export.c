@@ -6,11 +6,51 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/20 09:42:16 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:55:23 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_getvarname(char *arg)
+{
+	int		i;
+	char	*out;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	if (!arg[i])
+		return (NULL);
+	out = ft_calloc(i +1, sizeof(char));
+	i = 0;
+	while (arg[i] != '=')
+	{
+		out[i] = arg[i];
+		i++;
+	}
+	return (out);
+}
+
+char	*ft_getvarvalue(char *arg)
+{
+	int		i;
+	int		j;
+	char	*out;
+
+	i = 0;
+	j = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	if (!arg[i])
+		return (NULL);
+	out = ft_calloc(ft_strlen(arg) - i, sizeof(char));
+	i++;
+	while (arg[i])
+		out[j++] = arg[i++];
+
+	return (out);
+}
 
 static void	ft_addnewnode(char *arg, t_env *tmp)
 {
@@ -31,39 +71,6 @@ static void	ft_addnewnode(char *arg, t_env *tmp)
 	free(varvalue);
 }
 
-char	*ft_getvarname(char *arg)
-{
-	int		i;
-	char	*out;
-
-	i = 0;
-	while (arg[i] && arg[i] != '=')
-		i++;
-	if (!arg[i])
-		return (NULL);
-	out = ft_calloc(i +1, sizeof(char));
-	i = 0;
-	while (arg[i] != '=')
-		out[i++] = arg[i];
-	return (out);
-}
-
-char	*ft_getvarvalue(char *arg)
-{
-	int		i;
-	char	*out;
-
-	i = 0;
-	while (arg[i] && arg[i] != '=')
-		i++;
-	if (!arg[i])
-		return (NULL);
-	out = ft_calloc(ft_strlen(arg) - i, sizeof(char));
-	while (arg[i])
-		out[i++] = arg[i];
-	return (out);
-}
-
 void	ft_export(char **args, t_env *envp)
 {
 	t_env	*tmp;
@@ -73,7 +80,9 @@ void	ft_export(char **args, t_env *envp)
 
 	i = 0;
 	tmp = envp;
-	while (args[i++])
+	// make returns for wrong args
+	// handle export for allready existing variables(edit)
+	while (args[i])
 	{
 		while (tmp)
 		{
@@ -93,6 +102,8 @@ void	ft_export(char **args, t_env *envp)
 		}
 		if (tmp->next == NULL)
 			ft_addnewnode(args[i], tmp);
+		tmp = tmp->next;
 		tmp = envp;
+		i++;
 	}
 }

@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/20 09:44:44 by fvon-nag         ###   ########.fr        #
+#    Updated: 2023/04/20 13:05:00 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SOURCES = main.c \
 			syscommands.c \
 			syscommands_utils.c \
 			export.c \
+			buildins.c \
 
 
 

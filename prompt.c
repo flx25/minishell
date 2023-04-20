@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/20 09:46:09 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/20 14:02:47 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,7 +404,7 @@ void	ft_parse_input(char *in_put, char **envp)
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	env_list = ft_get_envp(envp);
+	env_list = ft_get_envp(envp); //only should run one time, in order for custom variables to work
 	in_put = ft_check_expand(in_put, env_list);
 	if (ft_strchr(&in_put[count], '|'))
 		cmd = ft_many_cmd(&in_put[count], env_list);
@@ -433,5 +433,8 @@ void	ft_parse_input(char *in_put, char **envp)
 			printf("To_file: %s\n", tmp->to_file);
 		tmp = tmp->next;
 	}
-	export(cmd->args, env_list);
+	if (!ft_strcmp(cmd->cmd, "export"))
+		ft_export(cmd->args, env_list);
+	else if (!ft_strcmp(cmd->cmd, "env"))
+		ft_env(env_list);
 }
