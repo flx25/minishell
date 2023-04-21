@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/21 10:56:41 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/21 15:00:16 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,19 +156,99 @@ int	ft_checklistlen(t_env *envp) //need to check if it counts correctly
 	return (len);
 }
 
+int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
+{
+	t_env	*tmp;
+
+	tmp = envp;
+	while (tmp)
+	{
+		if (withcostumvars)
+		{
+			if (indexprinted[tmp->index])
+				return (1);
+			if (tmp->next)
+				tmp = tmp->next;
+			else
+				return (0);
+		}
+		else
+		{
+			if (indexprinted[tmp->index] && !tmp->custom)
+				return (1);
+			if (tmp->next)
+				tmp = tmp->next;
+			else
+				return (0);
+		}
+	}
+	return (0);
+}
+
+void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted)
+{
+	t_env	*tmp;
+
+	tmp = envp;
+	while (tmp)
+	{
+		if (!strcmp(varname, tmp->var))
+		{
+			indexprinted[tmp->index] = 1;
+			return ;
+		}
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return ;
+	}
+}
+void	ft_printnextalpha(t_env *envp, int *indexprinted)
+{
+	t_env	*tmp;
+	char	*varname;
+	char	*varval;
+
+	tmp = envp;
+	varname = NULL;
+	varval = NULL;
+	while (tmp)
+	{
+		if (!indexprinted[tmp->index] && (!varname
+				|| ft_isbeforinalph(varname, tmp->var)))
+		{
+			varname = tmp->var;
+			varval = tmp->value;
+		}
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			break ;
+	}
+	printf("declare -x %s=%s\n", varname, varval);
+	ft_setindexprinted(envp, varname, indexprinted);
+}
+
+void	ft_printinorder(t_env *envp, int *indexprinted)
+{
+	t_env	*tmp;
+
+	tmp = envp;
+	while (ft_isnotprinted(envp, indexprinted, 1))
+		ft_printnextalpha(envp, indexprinted);
+
+}
+
 void	ft_listvariables(t_env *envp)
 {
 	t_env	*tmp;
 	int		listlen;
-	int		*indexlist;
+	int		*indexprinted;
 
 	tmp = envp;
 	listlen = ft_checklistlen(tmp);
-	indexlist = ft_calloc(listlen, sizeof(int));
-	// while (tmp)
-	// {
-
-	// }
+	indexprinted = ft_calloc(listlen, sizeof(int));
+	ft_printinorder(envp, indexprinted);
 }
 
 int	ft_export(char **args, t_env *envp)
