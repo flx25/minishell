@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/21 15:00:16 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/21 16:02:10 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,18 @@ void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted)
 			return ;
 	}
 }
+
+int	ft_isbeforeinalph(char *varname, char *tmpvar)
+{
+	int	returnval;
+
+	returnval = ft_strcmp(varname, tmpvar);
+	if (!returnval || returnval > 0)
+		return (0);
+	else
+		return (1);
+
+}
 void	ft_printnextalpha(t_env *envp, int *indexprinted)
 {
 	t_env	*tmp;
@@ -215,7 +227,7 @@ void	ft_printnextalpha(t_env *envp, int *indexprinted)
 	while (tmp)
 	{
 		if (!indexprinted[tmp->index] && (!varname
-				|| ft_isbeforinalph(varname, tmp->var)))
+				|| ft_isbeforeinalph(varname, tmp->var)))
 		{
 			varname = tmp->var;
 			varval = tmp->value;
