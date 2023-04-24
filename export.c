@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 11:51:27 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 13:31:57 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	ft_listvariables(t_env *envp)
 	ft_printinorder(envp, indexprinted);
 	free(indexprinted);
 }
-// still a bug for multiple exports different filenames (maybe exporting in allready exportet is it)
+
 int	ft_export(char **args, t_env *envp)
 {
 	if (args)
