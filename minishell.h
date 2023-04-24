@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 15:43:47 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 16:40:50 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef struct s_env
 	struct s_env	*next;
 	int				custom;
 }				t_env;
-
 
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term

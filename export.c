@@ -6,15 +6,14 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 15:51:14 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 16:58:46 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// export still occasionally bugs, infinitely looping the listings with export (no args), was not able to reproduce this bug, but it happened two times so far
-// not sure if i fixed it by allocating listlen + 1 now
-//loop caused by
+//loop caused by // no loop anymore but double variable now error shoul be on export args
+// -> check if it correctly checks for allready existing variables
 //export test
 //export test1
 //export test
@@ -91,7 +90,7 @@ void	ft_listvariables(t_env *envp)
 
 	tmp = envp;
 	listlen = ft_checklistlen(tmp);
-	indexprinted = ft_calloc(listlen, sizeof(int));
+	indexprinted = ft_calloc(listlen +1, sizeof(int));
 	ft_printinorder(envp, indexprinted);
 	free(indexprinted);
 }

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:32:18 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 15:50:17 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 16:50:16 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,16 @@ int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
 
 void	ft_printinorder(t_env *envp, int *indexprinted)
 {
+	t_env	*tmp;
 	while (ft_isnotprinted(envp, indexprinted, 1))
 		ft_printnextalpha(envp, indexprinted);
+	tmp = envp;
+	while (tmp)
+	{
+		printf("%s \n", tmp->var);
+		if(tmp->next)
+			tmp = tmp->next;
+	}
 
 }
 
