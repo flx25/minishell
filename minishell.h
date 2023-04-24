@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/21 10:49:43 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 11:49:49 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,5 +74,18 @@ int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
 int		ft_export(char **args, t_env *envp);
 int		ft_env(t_env *envp);
+void	ft_addnewnode(char *arg, t_env *tmp);
+int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
+int		ft_checklistlen(t_env *envp);
+void	ft_printinorder(t_env *envp, int *indexprinted);
+int		ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars);
+int		ft_isbeforeinalph(char *varname, char *tmpvar);
+int		ft_isvalididentifier(char c);
+int		ft_checkforwrongargs(char **args);
+void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted);
+char	*ft_getvarname(char *arg);
+char	*ft_getvarvalue(char *arg);
+void	ft_printnextalpha(t_env *envp, int *indexprinted);
+
 
 #endif

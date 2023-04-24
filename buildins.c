@@ -6,13 +6,15 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/20 15:34:31 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 11:13:35 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //need to set the _= envoirment variable to the last executed programm
+// need to get 'cd .. cd ~ cd / (cd -)' to work
+// cd needs to change envoirmental list
 int	ft_cd(char **args)
 {
 	struct stat	st;

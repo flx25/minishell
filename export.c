@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/21 16:02:10 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 11:51:27 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,80 +52,18 @@ char	*ft_getvarvalue(char *arg)
 	return (out);
 }
 
-static void	ft_addnewnode(char *arg, t_env *tmp)
-{
-	t_env	*node;
-	char	*varname;
-	char	*varvalue;
-
-	node = (t_env *)ft_calloc(sizeof(t_env), 1);
-	if (!node)
-		return ;
-	varname = ft_getvarname(arg);
-	varvalue = ft_getvarvalue(arg);
-	node->var = ft_strdup(varname);
-	if (varvalue)
-		node->value = ft_strdup(varvalue);
-	else
-		node->value = NULL; //maybe change this in order to make variables without value visible in export not in env
-	node->custom = 1;
-	node->index = tmp->index + 1;
-	tmp->next = node;
-	free(varname);
-	free(varvalue);
-}
-
-static int	check_and_edit_existing_var(char **args, t_env *tmp, int i)
-{
-	char	*varname;
-	char	*varvalue;
-
-	varvalue = ft_getvarvalue(args[i]);
-	varname = ft_getvarname(args[i]);
-	if (!ft_strcmp(tmp->var, varname))
-	{
-		free(tmp->value);
-		if (varvalue)
-			tmp->value = ft_strdup(varvalue);
-		else
-			tmp->value = NULL;
-		free(varname);
-		return (1);
-	}
-	free(varname);
-	return (0);
-}
-
-int	ft_checkforwrongarg(char **args, int i)
-{
-	char	*varvalue;
-
-	if (args[i][0] == '=')
-	{
-		varvalue = ft_getvarvalue(args[i]);
-		printf(" export: `=%s': not a valid identifier\n", varvalue);
-		return (free(varvalue), 1);
-	}
-	else
-		return (0);
-}
-
 void	ft_export_arg(char **args, t_env *envp, t_env *tmp, int i)
 {
 	int	foundvar;
-	int	wrongarg;
 
 	foundvar = 0;
 	while (args[i])
 	{
-		wrongarg = ft_checkforwrongarg(args, i);
-		if (wrongarg == 1 && args[i +1])
-			i++;
-		else if (wrongarg == 1 && !args[i +1])
+		if (ft_checkforwrongargs(args))
 			break ;
 		while (tmp)
 		{
-			foundvar = check_and_edit_existing_var(args, tmp, i);
+			foundvar = ft_check_and_edit_existing_var(args, tmp, i);
 			if (!tmp->next)
 				break ;
 			tmp = tmp->next;
@@ -138,119 +76,6 @@ void	ft_export_arg(char **args, t_env *envp, t_env *tmp, int i)
 	}
 }
 
-int	ft_checklistlen(t_env *envp) //need to check if it counts correctly
-{
-	t_env	*tmp;
-	int		len;
-
-	tmp = envp;
-	len = 0;
-	while (tmp)
-	{
-		len++;
-		if (tmp->next)
-			tmp = tmp->next;
-		else
-			return (len);
-	}
-	return (len);
-}
-
-int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
-{
-	t_env	*tmp;
-
-	tmp = envp;
-	while (tmp)
-	{
-		if (withcostumvars)
-		{
-			if (indexprinted[tmp->index])
-				return (1);
-			if (tmp->next)
-				tmp = tmp->next;
-			else
-				return (0);
-		}
-		else
-		{
-			if (indexprinted[tmp->index] && !tmp->custom)
-				return (1);
-			if (tmp->next)
-				tmp = tmp->next;
-			else
-				return (0);
-		}
-	}
-	return (0);
-}
-
-void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted)
-{
-	t_env	*tmp;
-
-	tmp = envp;
-	while (tmp)
-	{
-		if (!strcmp(varname, tmp->var))
-		{
-			indexprinted[tmp->index] = 1;
-			return ;
-		}
-		if (tmp->next)
-			tmp = tmp->next;
-		else
-			return ;
-	}
-}
-
-int	ft_isbeforeinalph(char *varname, char *tmpvar)
-{
-	int	returnval;
-
-	returnval = ft_strcmp(varname, tmpvar);
-	if (!returnval || returnval > 0)
-		return (0);
-	else
-		return (1);
-
-}
-void	ft_printnextalpha(t_env *envp, int *indexprinted)
-{
-	t_env	*tmp;
-	char	*varname;
-	char	*varval;
-
-	tmp = envp;
-	varname = NULL;
-	varval = NULL;
-	while (tmp)
-	{
-		if (!indexprinted[tmp->index] && (!varname
-				|| ft_isbeforeinalph(varname, tmp->var)))
-		{
-			varname = tmp->var;
-			varval = tmp->value;
-		}
-		if (tmp->next)
-			tmp = tmp->next;
-		else
-			break ;
-	}
-	printf("declare -x %s=%s\n", varname, varval);
-	ft_setindexprinted(envp, varname, indexprinted);
-}
-
-void	ft_printinorder(t_env *envp, int *indexprinted)
-{
-	t_env	*tmp;
-
-	tmp = envp;
-	while (ft_isnotprinted(envp, indexprinted, 1))
-		ft_printnextalpha(envp, indexprinted);
-
-}
-
 void	ft_listvariables(t_env *envp)
 {
 	t_env	*tmp;
@@ -261,15 +86,14 @@ void	ft_listvariables(t_env *envp)
 	listlen = ft_checklistlen(tmp);
 	indexprinted = ft_calloc(listlen, sizeof(int));
 	ft_printinorder(envp, indexprinted);
+	free(indexprinted);
 }
-
+// still a bug for multiple exports different filenames (maybe exporting in allready exportet is it)
 int	ft_export(char **args, t_env *envp)
 {
-	// have two times the same variable if exporting it once without value and once with
 	if (args)
 		ft_export_arg(args, envp, envp, 0);
 	else
 		ft_listvariables(envp);
 	return (0);
-	// make returns for wrong args, set variables with only values for for export only
 }
