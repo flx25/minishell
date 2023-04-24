@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 12:34:59 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/24 13:32:06 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,28 @@ int	ft_closing_qoutes(char *in_put)
 	{
 		if (in_put[count] == '"' || in_put[count] == '\'')
 		{
-			closing = 1;
-			divid = in_put[count];
-			while (in_put[++count] && in_put[count] != divid);
-			if (in_put[count] == divid)
+			if (!closing)
+			{
+				closing = 1;
+				divid = in_put[count];
+			}
+			else if (in_put[count] == divid)
 				closing = 0;
 		}
 	}
 	if (closing)
 	{
 		free(in_put);
-		printf("minishell: unclosing qoute detected.\n");
-		return (1);
+		return (printf("minishell: unclosed qoute detected.\n"), 1);
 	}
 	return (0);
 }
-
 
 /* Used to display the prompt and read the input from the user */
 int	ft_read_prompt(char **envp)
 {
 	char	*str;
+
 	while (true)
 	{
 		str = readline(PROMPT);
