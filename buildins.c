@@ -6,20 +6,20 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 11:13:35 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 14:19:29 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //need to set the _= envoirment variable to the last executed programm
-// need to get 'cd .. cd ~ cd / (cd -)' to work
+// need to get 'cd ~ cd / (cd -)' to work
 // cd needs to change envoirmental list
 int	ft_cd(char **args)
 {
 	struct stat	st;
 
-	if (args[0] == NULL)
+	if (!args || args[0] == NULL)
 		return (printf("cd: expected argument to \"cd\"\n"), 1);
 	else
 	{
@@ -44,8 +44,10 @@ int	ft_env(t_env *envp)
 	tmp = envp;
 	while (tmp)
 	{
-		if (tmp->var && tmp->value)
+		if (tmp->var && !tmp->custom && tmp->value)
 			printf("%s=%s\n", tmp->var, tmp->value);
+		else if (tmp->var && !tmp->custom && !tmp->value)
+			printf("%s=\n", tmp->var);
 		if (tmp->next)
 			tmp = tmp->next;
 		else

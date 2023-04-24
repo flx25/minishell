@@ -6,12 +6,19 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 13:31:57 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:51:14 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// export still occasionally bugs, infinitely looping the listings with export (no args), was not able to reproduce this bug, but it happened two times so far
+// not sure if i fixed it by allocating listlen + 1 now
+//loop caused by
+//export test
+//export test1
+//export test
+//this one works now without infinite looping but creates two variables listed on echo
 char	*ft_getvarname(char *arg)
 {
 	int		i;
@@ -97,3 +104,4 @@ int	ft_export(char **args, t_env *envp)
 		ft_listvariables(envp);
 	return (0);
 }
+

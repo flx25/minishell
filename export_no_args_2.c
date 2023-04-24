@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:38:13 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 11:40:02 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:23:43 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ int	ft_checkforwrongargs(char **args)
 }
 
 
-void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted)
+void	ft_setindexprinted(t_env *envp, int index, int *indexprinted)
 {
 	t_env	*tmp;
 
 	tmp = envp;
 	while (tmp)
 	{
-		if (!ft_strcmp(varname, tmp->var))
+		if (index == tmp->index) //compares incorrecly maybe function does not count to the highest index
 		{
 			indexprinted[tmp->index] = 1;
 			return ;

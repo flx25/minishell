@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 13:28:38 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:43:47 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_env
 	int				custom;
 }				t_env;
 
+
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
 {
@@ -82,9 +83,11 @@ int		ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars);
 int		ft_isbeforeinalph(char *varname, char *tmpvar);
 int		ft_isvalididentifier(char c);
 int		ft_checkforwrongargs(char **args);
-void	ft_setindexprinted(t_env *envp, char *varname, int *indexprinted);
+void	ft_setindexprinted(t_env *envp, int index, int *indexprinted);
 char	*ft_getvarname(char *arg);
 char	*ft_getvarvalue(char *arg);
 void	ft_printnextalpha(t_env *envp, int *indexprinted);
+int		ft_cd(char **args);
+int		ft_pwd(void);
 
 #endif

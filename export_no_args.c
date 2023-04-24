@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:32:18 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 11:49:39 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:50:17 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,6 @@ int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
 
 void	ft_printinorder(t_env *envp, int *indexprinted)
 {
-	t_env	*tmp;
-
-	tmp = envp;
 	while (ft_isnotprinted(envp, indexprinted, 1))
 		ft_printnextalpha(envp, indexprinted);
 
@@ -86,28 +83,24 @@ int	ft_checklistlen(t_env *envp)
 void	ft_printnextalpha(t_env *envp, int *indexprinted)
 {
 	t_env	*tmp;
-	char	*varname;
-	char	*varval;
+	t_env	*tmp_2;
 
 	tmp = envp;
-	varname = NULL;
-	varval = NULL;
+	tmp_2 = ft_calloc(1, sizeof(t_env));
 	while (tmp)
 	{
-		if (!indexprinted[tmp->index] && (!varname
-				|| ft_isbeforeinalph(varname, tmp->var)))
-		{
-			varname = tmp->var;
-			varval = tmp->value;
-		}
+		if (!indexprinted[tmp->index] && (!tmp_2->var
+				|| ft_isbeforeinalph(tmp_2->var, tmp->var)))
+			tmp_2 = tmp;
 		if (tmp->next)
 			tmp = tmp->next;
 		else
 			break ;
 	}
-	if (varval)
-		printf("declare -x %s=%s\n", varname, varval);
+	if (tmp_2->value)
+		printf("declare -x %s=%s\n", tmp_2->var, tmp_2->value);
 	else
-		printf("declare -x %s\n", varname);
-	ft_setindexprinted(envp, varname, indexprinted);
+		printf("declare -x %s\n", tmp_2->var);
+	ft_setindexprinted(envp, tmp_2->index, indexprinted);
+	//most likely need to free (not sure though)
 }

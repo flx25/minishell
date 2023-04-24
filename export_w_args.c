@@ -6,11 +6,24 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:37:20 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 11:44:55 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 14:03:36 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_listinenv(char *arg)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+		i++;
+	if (arg[i] == '=' && i == (int) ft_strlen(arg) - 1)
+		return (1);
+	else
+		return (0);
+}
 
 void	ft_addnewnode(char *arg, t_env *tmp)
 {
@@ -28,7 +41,8 @@ void	ft_addnewnode(char *arg, t_env *tmp)
 		node->value = ft_strdup(varvalue);
 	else
 		node->value = NULL;
-	node->custom = 1;
+	if (!ft_listinenv(arg))
+		node->custom = 1;
 	node->index = tmp->index + 1;
 	tmp->next = node;
 	free(varname);
