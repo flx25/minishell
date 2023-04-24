@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 02:31:08 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/24 12:54:29 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,47 +41,23 @@ int	ft_isnspace_indx(char *in_put)
 // 	free(str);
 // 	return (tmp);
 // }
-//
-// int	ft_qoutes(char *str, char *in_put, char divid)
-// {
-// 	int	count;
-//
-// 	count = 0;
-// 	while (in_put[count] && in_put[count] != divid)
-// 	{
-// 		// str = ft_realloc(str, ft_strlen(str), ft_strlen(str) + 1);
-// 		// str[ft_strlen(str)] = in_put[count];
-//
-// 		str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
-// 		count ++;
-// 	}
-// 	return (count);
-// }
 
-char	*ft_lexer(t_cmds *cmd, char *in_put)
+char	*ft_expansion(char *str, t_env *env_list)
 {
-	char	*str;
-	char	divid;
-	int		count;
+	t_env	*tmp;
 
-	count = -1;
-	divid = 0;
-	str = (char *)ft_calloc(1, sizeof(char));
-	while (in_put[++count] && in_put[count] != ' ')
+	tmp = env_list;
+	while (tmp)
 	{
-		if (in_put[count] == '"' || in_put[count] == '\'')
+		if (!ft_strncmp(str, tmp->var, ft_strlen(str)))
 		{
-			divid = in_put[count];
-			while (in_put[++count] && in_put[count] != divid)
-				str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+			free(str);
+			return (ft_strdup(tmp->value));
 		}
-		else
-			str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
+		tmp = tmp->next;
 	}
-	cmd->skip_char += count;
-	if (in_put[count])
-		cmd->skip_char ++;
-	return (str);
+	free(str);
+	return (ft_strdup(""));
 }
 
 /* Used to reallocate memory for the double pointer string */
@@ -92,7 +68,7 @@ char	**ft_double_realloc(char **str, int old_size, int new_size)
 
 	tmp = (char **)ft_calloc(new_size, sizeof(char *));
 	count = 0;
-	while (count < old_size - 1)
+	while (count < old_size)
 	{
 		tmp[count] = ft_strdup(str[count]);
 		free(str[count]);
@@ -102,7 +78,7 @@ char	**ft_double_realloc(char **str, int old_size, int new_size)
 	return (tmp);
 }
 
-int	ft_in_redirection(char *in_put)
+int	ft_get_redirection(char *in_put)
 {
 	int	count;
 	int	result;
@@ -119,94 +95,218 @@ int	ft_in_redirection(char *in_put)
 	return (result);
 }
 
-void	ft_add_inredirect(char *in_put, t_cmds *cmd, int redirect)
+// void	ft_arrange_args(t_cmds *cmd, int index, int len)
+// {
+// 	if (!cmd->args[index][len])
+// 	{
+// 		free(cmd->args[index]);
+// 		free(cmd->args[index + 1]);
+// 		while (cmd->args[index + 2])
+// 		{
+// 			cmd->args[index] = cmd->args[index + 2];
+// 			index ++;
+// 		}
+// 		cmd->args[index] = NULL;
+// 		return ;
+// 	}
+// 	free(cmd->args[index]);
+// 	cmd->args[index] = cmd->args[index + 1];
+// 	while (cmd->args[++index])
+// 		cmd->args[index] = cmd->args[index + 1];
+// }
+
+char	*ft_join_free_both(char *s1, char *s2)
 {
-	if ((redirect & INPUT) == INPUT)
-		cmd->from_file = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	else if ((redirect & HEREDOC) == HEREDOC)
-		cmd->hdocs_end = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
-		cmd->to_file = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	cmd->redirect |= redirect;
+	char	*nstr;
+	size_t	len_s1;
+	size_t	len_s2;
+
+	if (!s1)
+		s1 = (char *)ft_calloc(1, sizeof(char));
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	nstr = (char *)malloc((len_s1 + len_s2 + 1) * sizeof(char));
+	if (!nstr)
+		return (NULL);
+	ft_strlcpy(nstr, s1, len_s1 + 1);
+	ft_strlcpy(&nstr[len_s1], s2, len_s2 + 1);
+	free(s1);
+	free(s2);
+	return (nstr);
 }
 
-void	ft_arrange_args(t_cmds *cmd, int index, int len)
+char	*ft_getenv_var(char *in_put, int *index, t_env *env_list)
 {
-	if (!cmd->args[index][len])
+	char	*str;
+	int		count;
+
+	count = *index;
+	str = NULL;
+	while (in_put[++count] && ft_isalnum(in_put[count]))
+		str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+	*index = count - 1;
+	return (ft_expansion(str, env_list));
+}
+
+char	*ft_inside_qoutes(char *str, char *in_put, int *index, t_env *env_list)
+{
+	char	*tmp;
+	char	divid;
+	int		count;
+
+	count = *index;
+	divid = in_put[count];
+	while (in_put[++count] && in_put[count] != divid)
 	{
-		free(cmd->args[index]);
-		free(cmd->args[index + 1]);
-		while (cmd->args[index + 2])
+		tmp = NULL;
+		if (in_put[count] == '$' && divid == '"')
+			tmp = ft_getenv_var(in_put, &count, env_list);
+		if (tmp)
+			str = ft_join_free_both(str, tmp);
+		else
+			str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+	}
+	*index = count;
+	return (str);
+}
+
+// char	**ft_cmd_table(char **cmd_table, char *str, int index)
+// {
+// 	cmd_table[index] = ft_strdup(str);
+// 	cmd_table = ft_double_realloc(cmd_table, index + 1, index + 2);
+// 	free(str);
+// 	return (cmd_table);
+// }
+
+char	*ft_tokenize(char *str, char *in_put, int *index, t_env *env_list)
+{
+	int		cnt;
+
+	cnt = *index;
+	while (in_put[cnt] && in_put[cnt] != ' ' // && in_put[count] != '|'
+		&& in_put[cnt] != '<' && in_put[cnt] != '>')
+	{
+		if (in_put[cnt] == '"' || in_put[cnt] == '\'')
+			str = ft_inside_qoutes(str, in_put, &cnt, env_list);
+		else if (in_put[cnt] == '$')
+			str = ft_join_free_both(str, ft_getenv_var(in_put, &cnt, env_list));
+		else
+			str = ft_join_free_both(str, ft_substr(&in_put[cnt], 0, 1));
+		cnt ++;
+	}
+	// if (in_put[cnt] == '|' && !str)
+	// {
+	// 	str = ft_join_free_both(str, ft_substr(&in_put[cnt], 0, 1));
+	// 	cnt ++;
+	// }
+	cnt += ft_isnspace_indx(&in_put[cnt]) - 1;
+	*index = cnt;
+	return (str);
+}
+
+char	**ft_lexer(char *in_put, t_env *env_list)
+{
+	char	**cmd_table;
+	char	*str;
+	int		count;
+	int		index;
+
+	count = -1;
+	index = -1;
+	cmd_table = (char **)ft_calloc(1, sizeof(char *));
+	if (!cmd_table)
+		return (NULL);
+	while (in_put[++count])
+	{
+		str = NULL;
+		while (in_put[count] && (in_put[count] == '<' || in_put[count] == '>'))
 		{
-			cmd->args[index] = cmd->args[index + 2];
+			str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+			count ++;
+		}
+		str = ft_tokenize(str, in_put, &count, env_list);
+		cmd_table[++index] = ft_strdup(str);
+		cmd_table = ft_double_realloc(cmd_table, index + 1, index + 2);
+		free(str);
+	}
+	return (cmd_table);
+}
+
+int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
+{
+	int	count;
+	int	redirect;
+
+	count = 0;
+	redirect = cmd->redirect;
+	while (table[index][count] && (table[index][count] == '<' ||
+			table[index][count] == '>'))
+		count ++;
+	if (count != len)
+		return (1);
+	if (!table[index][len])
+	{
+		len = 0;
+		index ++;
+	}
+	if ((redirect & INPUT) == INPUT)
+		cmd->from_file = ft_substr(table[index], len, ft_strlen(table[index]));
+	else if ((redirect & HEREDOC) == HEREDOC)
+		cmd->hdocs_end = ft_substr(table[index], len, ft_strlen(table[index]));
+	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
+		cmd->to_file = ft_substr(table[index], len, ft_strlen(table[index]));
+	return (0);
+}
+
+void	ft_arrange_table(char **table, int index, int len)
+{
+	if (!table[index][len])
+	{
+		free(table[index]);
+		free(table[index + 1]);
+		while (table[index + 2])
+		{
+			table[index] = table[index + 2];
 			index ++;
 		}
-		cmd->args[index] = NULL;
+		table[index] = NULL;
 		return ;
 	}
-	free(cmd->args[index]);
-	cmd->args[index] = cmd->args[index + 1];
-	while (cmd->args[++index])
-		cmd->args[index] = cmd->args[index + 1];
+	free(table[index]);
+	table[index] = table[index + 1];
+	while (table[++index])
+		table[index] = table[index + 1];
 }
 
-void	ft_after_redirect(t_cmds *cmd)
+int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 {
 	int		count;
 	int		len;
 	int		redirect;
 
 	count = -1;
-	while (cmd->args && cmd->args[++count])
+	while (cmd_table[++count])
 	{
 		len = 0;
-		if (ft_in_redirection(cmd->args[count]))
+		if (ft_get_redirection(cmd_table[count]))
 		{
-			redirect = ft_in_redirection(cmd->args[count]);
+			redirect = ft_get_redirection(cmd_table[count]);
 			len ++;
 			if ((redirect & HEREDOC) || (redirect & APPEND))
 				len ++;
-			cmd->skip_char = 0;
-			if (cmd->args[count][len])
-				ft_add_inredirect(&cmd->args[count][len], cmd, redirect);
-			else
-				ft_add_inredirect(cmd->args[count + 1], cmd, redirect);
-			ft_arrange_args(cmd, count, len);
+			cmd->redirect |= redirect;
+			if (ft_add_redirection(cmd_table, cmd, count, len))
+			{
+				printf("%s `%c'\n", DIRECTION_ERR, cmd_table[count][0]);
+				return (1);
+			}
+			ft_arrange_table(cmd_table, count, len);
 			count --;
 		}
 	}
-}
-
-int	ft_get_args(t_cmds *cmd, char *in_put)
-{
-	int	count;
-
-	count = 0;
-	cmd->skip_char += ft_isnspace_indx(&in_put[cmd->skip_char]);
-	if (!in_put[cmd->skip_char])
-		return (0);
-	cmd->args = (char **)ft_calloc(2, sizeof(char *));
-	while (in_put[cmd->skip_char])
-	{
-		cmd->args[count] = ft_lexer(cmd, &in_put[cmd->skip_char]);
-		count ++;
-		cmd->skip_char += ft_isnspace_indx(&in_put[cmd->skip_char]);
-		cmd->args = ft_double_realloc(cmd->args, count + 1, count + 2);
-	}
 	return (0);
-}
-
-t_cmds	*ft_parser(char *in_put, t_env *env_list)
-{
-	t_cmds	*cmd;
-
-	(void) env_list;
-	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
-	cmd->skip_char = ft_isnspace_indx(in_put);
-	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	ft_get_args(cmd, in_put);
-	ft_after_redirect(cmd);
-	return (cmd);
 }
 
 /* Used to free any double string */
@@ -223,60 +323,75 @@ void	ft_free_dstr(char **str)
 	free(str);
 }
 
-t_cmds	*ft_redirect_cmd(char *in_put)
+t_cmds	*ft_parser(char **cmd_table)
 {
 	t_cmds	*cmd;
-	int		len;
-	int		redirect;
+	int		count;
 
-	len = 0;
-	len = ft_isnspace_indx(in_put);
-	redirect = ft_in_redirection(&in_put[len]);
-	if (!redirect)
-		return (NULL);
-	len ++;
-	if ((redirect & HEREDOC) || (redirect & APPEND))
-		len ++;
-	if (!in_put[len])
-		return (NULL);
 	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
-	len += ft_isnspace_indx(&in_put[len]);
-	cmd->skip_char = len;
-	ft_add_inredirect(in_put, cmd, redirect);
-	cmd->skip_char += ft_isnspace_indx(&in_put[len]);
-	cmd->cmd = ft_lexer(cmd, &in_put[cmd->skip_char]);
-	ft_get_args(cmd, in_put);
-	ft_after_redirect(cmd);
-	cmd->next = NULL;
+	if (!cmd)
+		return (NULL);
+	if (ft_check_redirect(cmd, cmd_table))
+	{
+		ft_free_dstr(cmd_table);
+		free(cmd);
+		return (NULL);
+	}
+	count = 0;
+	cmd->cmd = ft_strdup(cmd_table[count]);
+	cmd->args = (char **)ft_calloc(1, sizeof(char *));
+	if (!cmd->args)
+		return (NULL);
+	while (cmd_table[++count])
+	{
+		cmd->args[count - 1] = ft_strdup(cmd_table[count]);
+		cmd->args = ft_double_realloc(cmd->args, count, count + 1);
+	}
+	ft_free_dstr(cmd_table);
 	return (cmd);
 }
 
-/* Used to split the mutiple commands and create
- a linked list for them and their arguments */
 t_cmds	*ft_many_cmd(char *in_put, t_env *env_list)
 {
 	char	**many_cmd;
-	t_cmds	*cmds;
+	t_cmds	*cmd;
 	t_cmds	*tmp;
 	int		count;
+	int		len;
 
 	many_cmd = ft_split(in_put, '|');
 	count = 0;
-	cmds = ft_redirect_cmd(many_cmd[count]);
-	if (!cmds)
-		cmds = ft_parser(many_cmd[count], env_list);
-	tmp = cmds;
-	count ++;
-	while (many_cmd[count])
+	cmd = ft_parser(ft_lexer(many_cmd[count], env_list));
+	tmp = cmd;
+	while (many_cmd[++count])
 	{
-		tmp->next = ft_redirect_cmd(many_cmd[count]);
-		if (!tmp->next)
-			tmp->next = ft_parser(many_cmd[count], env_list);
+		len = ft_isnspace_indx(many_cmd[count]);
+		tmp->next = ft_parser(ft_lexer(&many_cmd[count][len], env_list));
 		tmp = tmp->next;
-		count ++;
 	}
-	ft_free_dstr(many_cmd);
-	return (cmds);
+	return (cmd);
+}
+
+t_cmds	*ft_text_analysis(char *in_put, t_env *env_list)
+{
+	char	**cmd_table;
+	t_cmds	*cmd;
+
+	if (ft_strchr(in_put, '|'))
+	{
+		cmd = ft_many_cmd(in_put, env_list);
+		return (cmd);
+	}
+	cmd_table = ft_lexer(in_put, env_list);
+	cmd = ft_parser(cmd_table);
+	return (cmd);
+	// while (cmd_table[count])
+	// {
+	// 	printf("%s\n", cmd_table[count]);
+	// 	count ++;
+	// }
+	// ft_new_parser(cmd_table);
+	// return (NULL);
 }
 
 t_env	*ft_create_envnode(char *envp, int index)
@@ -284,12 +399,12 @@ t_env	*ft_create_envnode(char *envp, int index)
 	t_env	*node;
 	char	**str;
 
-	node = (t_env *)ft_calloc(sizeof(t_env), 1);
-	if(!node)
+	node = (t_env *)ft_calloc(1, sizeof(t_env));
+	if (!node)
 		return (NULL);
 	str = ft_split(envp, '=');
-	node->var = strdup(str[0]);
-	node->value = strdup(str[1]);
+	node->var = ft_strdup(str[0]);
+	node->value = ft_strdup(str[1]);
 	node->index = index;
 	ft_free_dstr(str);
 	return (node);
@@ -309,85 +424,11 @@ t_env	*ft_get_envp(char **envp)
 	while (envp[++count])
 	{
 		tmp->next = ft_create_envnode(envp[count], count);
-		if(!tmp)
+		if (!tmp)
 			return (NULL);
 		tmp = tmp->next;
 	}
 	return (head);
-}
-
-char	*ft_expansion(char *str, t_env *env_list)
-{
-	t_env	*tmp;
-
-	tmp = env_list;
-	while (tmp)
-	{
-		if (!ft_strncmp(str, tmp->var, ft_strlen(tmp->var)))
-		{
-			free(str);
-			return (ft_strdup(tmp->value));
-		}
-		tmp = tmp->next;
-	}
-	return (str);
-}
-
-char	*ft_find_expansion(t_env *env_list, char *in_put, int count)
-{
-	char	*tmp;
-	char	*str;
-	int		len;
-
-	len = 0;
-	str = NULL;
-	tmp = ft_substr(in_put, 0, count);
-	while (in_put[++count] && in_put[count] != '"' && in_put[count] != '\'')
-		str = ft_strjoin_free(str, ft_substr(&in_put[count], 0, 1));
-	if (str)
-	{
-		len = ft_strlen(str) + 1;
-		str = ft_expansion(str, env_list);
-		tmp = ft_strjoin_free(tmp, str);
-		tmp = ft_strjoin_free(tmp, ft_substr(in_put, count, ft_strlen(in_put)));
-		count += (ft_strlen(str) - len);
-		free(str);
-	}
-	else
-	{
-		free(tmp);
-		return (NULL);
-	}
-	return (tmp);
-}
-
-char	*ft_check_expand(char *in_put, t_env *env_list)
-{
-	char	*str;
-	int		count;
-
-	count = -1;
-	while (in_put[++count])
-	{
-		if (in_put[count] == '"' ||
-				(in_put[count] == '$' && in_put[count - 1] != '\''))
-		{
-			if (in_put[count] == '"')
-				count ++;
-			while (in_put[count] && in_put[count] != '"' && in_put[count] != '$')
-				count ++;
-			if (in_put[count] == '$')
-			{
-				str = ft_find_expansion(env_list, in_put, count);
-				if (str)
-				{
-					free(in_put);
-					in_put = str;
-				}
-			}
-		}
-	}
-	return (in_put);
 }
 
 /* Used to check the input and pass it to the parsing and cutting
@@ -405,13 +446,8 @@ void	ft_parse_input(char *in_put, char **envp)
 	if (!in_put[count])
 		return ;
 	env_list = ft_get_envp(envp);
-	in_put = ft_check_expand(in_put, env_list);
-	if (ft_strchr(&in_put[count], '|'))
-		cmd = ft_many_cmd(&in_put[count], env_list);
-	else if (in_put[count] == '<' || in_put[count] == '>')
-		cmd = ft_redirect_cmd(&in_put[count]);
-	else
-		cmd = ft_parser(&in_put[count], env_list);
+	cmd = ft_text_analysis(&in_put[count], env_list);
+	free(in_put);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/18 14:52:57 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/24 12:57:24 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,22 @@
 # include <termios.h>
 # include <sys/stat.h>
 # include "./Libft/libft.h"
-# define PROMPT "\033[35mminihell\033[36m$\033[0m "
-# define INPUT 1
-# define HEREDOC 2
-# define OUTPUT 4
-# define APPEND 8
+#define PROMPT "\033[35mminihell\033[36m$\033[0m "
+#define DIRECTION_ERR "minishell: syntax error near unexpected token"
+#define INPUT 1
+#define HEREDOC 2
+#define OUTPUT 4
+#define APPEND 8
 
 /* Node to store the commands in a linked list */
 typedef struct s_cmds
 {
 	char			*cmd;
 	char			**args;
-	char			*tmp_str;
 	char			*from_file;
 	char			*hdocs_end;
 	char			*to_file;
 	int				redirect;
-	int				skip_char;
 	struct s_cmds	*next;
 }				t_cmds;
 

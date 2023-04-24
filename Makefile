@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/18 14:53:17 by fvon-nag         ###   ########.fr        #
+#    Updated: 2023/04/24 13:03:53 by melkholy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,10 +49,10 @@ clean:
 	+make -C Libft clean
 
 fclean: clean
-	rm -f $(NAME) Libft/libft.a $(EXECUTABLES)
+	rm -rf $(NAME) Libft/libft.a $(EXECUTABLES) minishell.dSYM
 
-%: %.c
-		$(CC) $(CFLAGS) -o $@ $<
+# %: %.c
+# 		$(CC) $(CFLAGS) -o $@ $<
 
 re: fclean all
 
