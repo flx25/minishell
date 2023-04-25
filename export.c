@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 16:58:46 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/25 10:47:42 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_export_arg(char **args, t_env *envp, t_env *tmp, int i)
 		while (tmp)
 		{
 			foundvar = ft_check_and_edit_existing_var(args, tmp, i);
-			if (!tmp->next)
+			if (foundvar || !tmp->next)
 				break ;
 			tmp = tmp->next;
 		}
