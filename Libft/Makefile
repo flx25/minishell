@@ -6,7 +6,7 @@
 #    By: solariscode <solariscode@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/11 21:15:11 by melkholy          #+#    #+#              #
-#    Updated: 2022/09/08 15:29:41 by melkholy         ###   ########.fr        #
+#    Updated: 2023/04/24 19:20:36 by melkholy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,14 +24,12 @@ CFILES = ft_atoi.c ft_isdigit.c ft_memchr.c ft_putendl_fd.c \
 			ft_isalpha.c ft_memset.c ft_strchr.c ft_strlen.c \
 			ft_substr.c ft_isascii.c ft_putchar_fd.c ft_strdup.c \
 			ft_strmapi.c ft_tolower.c get_next_line.c \
-			get_next_line_utils.c
-
-BFILES = ft_lstdelone.c ft_lstiter.c ft_lstlast.c ft_lstadd_back.c \
+			get_next_line_utils.c \
+			ft_lstdelone.c ft_lstiter.c ft_lstlast.c ft_lstadd_back.c \
 			ft_lstmap.c ft_lstadd_front.c ft_lstnew.c ft_lstclear.c \
 			ft_lstsize.c
 
 OBJ = ${CFILES:.c=.o}
-BOBJ = ${BFILES:.c=.o}
 
 all : $(NAME)
 
@@ -40,17 +38,12 @@ $(NAME) :
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 
-bonus :
-	@$(CC) $(CFLAGS) -I$(CDIRS) -c $(BFILES)
-	@ar rc $(NAME) $(BOBJ)
-	@ranlib $(NAME)
-
 clean:
-	@rm -f $(OBJ) $(BOBJ)
+	@rm -f $(OBJ)
 
 fclean : clean
 	@rm -f $(NAME)
 
 re : fclean all
 
-.PHONY : all bonus clean fclean re
+.PHONY : all clean fclean re

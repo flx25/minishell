@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 12:57:24 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/24 19:15:27 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ void	ft_freepaths(char **paths);
 int		ft_issyscommand(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
+void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
 
 #endif

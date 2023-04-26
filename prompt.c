@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 12:54:29 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/26 14:43:32 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ char	*ft_tokenize(char *str, char *in_put, int *index, t_env *env_list)
 	int		cnt;
 
 	cnt = *index;
-	while (in_put[cnt] && in_put[cnt] != ' ' // && in_put[count] != '|'
+	while (in_put[cnt] && in_put[cnt] != ' '
 		&& in_put[cnt] != '<' && in_put[cnt] != '>')
 	{
 		if (in_put[cnt] == '"' || in_put[cnt] == '\'')
@@ -196,11 +196,6 @@ char	*ft_tokenize(char *str, char *in_put, int *index, t_env *env_list)
 			str = ft_join_free_both(str, ft_substr(&in_put[cnt], 0, 1));
 		cnt ++;
 	}
-	// if (in_put[cnt] == '|' && !str)
-	// {
-	// 	str = ft_join_free_both(str, ft_substr(&in_put[cnt], 0, 1));
-	// 	cnt ++;
-	// }
 	cnt += ft_isnspace_indx(&in_put[cnt]) - 1;
 	*index = cnt;
 	return (str);
@@ -287,7 +282,7 @@ int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 	int		redirect;
 
 	count = -1;
-	while (cmd_table[++count])
+	while (cmd_table && cmd_table[++count])
 	{
 		len = 0;
 		if (ft_get_redirection(cmd_table[count]))
@@ -315,7 +310,7 @@ void	ft_free_dstr(char **str)
 	int	count;
 
 	count = 0;
-	while (str[count])
+	while (str && str[count])
 	{
 		free(str[count]);
 		count ++;
@@ -331,7 +326,7 @@ t_cmds	*ft_parser(char **cmd_table)
 	cmd = (t_cmds *)ft_calloc(1, sizeof(t_cmds));
 	if (!cmd)
 		return (NULL);
-	if (ft_check_redirect(cmd, cmd_table))
+	if (!cmd_table || ft_check_redirect(cmd, cmd_table))
 	{
 		ft_free_dstr(cmd_table);
 		free(cmd);
@@ -351,39 +346,110 @@ t_cmds	*ft_parser(char **cmd_table)
 	return (cmd);
 }
 
-t_cmds	*ft_many_cmd(char *in_put, t_env *env_list)
+void	ft_free_cmdlist(t_cmds **cmds)
 {
-	char	**many_cmd;
-	t_cmds	*cmd;
+	t_cmds	*tmp;
+
+	tmp = *cmds;
+	while (tmp)
+	{
+		*cmds = (*cmds)->next;
+		free(tmp);
+		tmp = *cmds;
+	}
+}
+
+t_cmds	*ft_many_cmd(t_cmds *cmd, char **full_cmds, t_env *env_list)
+{
 	t_cmds	*tmp;
 	int		count;
 	int		len;
 
-	many_cmd = ft_split(in_put, '|');
-	count = 0;
-	cmd = ft_parser(ft_lexer(many_cmd[count], env_list));
+	count = -1;
+	if (!cmd)
+		return (cmd);
 	tmp = cmd;
-	while (many_cmd[++count])
+	while (full_cmds[++count])
 	{
-		len = ft_isnspace_indx(many_cmd[count]);
-		tmp->next = ft_parser(ft_lexer(&many_cmd[count][len], env_list));
+		len = ft_isnspace_indx(full_cmds[count]);
+		tmp->next = ft_parser(ft_lexer(&full_cmds[count][len], env_list));
+		if (!tmp->next)
+		{
+			ft_free_cmdlist(&cmd);
+			return (NULL);
+		}
 		tmp = tmp->next;
 	}
 	return (cmd);
 }
 
+char	*ft_cut_input(char *in_put, int *index)
+{
+	char	*str;
+	char	qoutes;
+	int		count;
+
+	count = *index - 1;
+	str = NULL;
+	while (in_put[++count] && in_put[count] != '|')
+	{
+		if (in_put[count] == '"' || in_put[count] == '\'')
+		{
+			qoutes = in_put[count];
+			str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+			while (in_put[++count] && in_put[count] != qoutes)
+				str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+		}
+		str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
+	}
+	if (!in_put[count])
+		count --;
+	*index = count;
+	return (str);
+}
+
+char	**ft_check_pipe_char(char *in_put)
+{
+	char	**cmds;
+	char	*str;
+	int		count;
+	int		index;
+
+	count = -1;
+	index = -1;
+	str = NULL;
+	cmds = (char **)ft_calloc(1, sizeof(char *));
+	if (!cmds)
+		return (NULL);
+	while (in_put[++count])
+	{
+		str = ft_cut_input(in_put, &count);
+		if (str)
+		{
+			cmds[++index] = ft_strdup(str);
+			cmds = ft_double_realloc(cmds, index + 1, index + 2);
+			free(str);
+		}
+	}
+	return (cmds);
+}
+
 t_cmds	*ft_text_analysis(char *in_put, t_env *env_list)
 {
-	char	**cmd_table;
+	char	**full_cmds;
 	t_cmds	*cmd;
+	int		count;
+	int		len;
 
-	if (ft_strchr(in_put, '|'))
-	{
-		cmd = ft_many_cmd(in_put, env_list);
-		return (cmd);
-	}
-	cmd_table = ft_lexer(in_put, env_list);
-	cmd = ft_parser(cmd_table);
+	count = 0;
+	len = 0;
+	full_cmds = ft_check_pipe_char(in_put);
+	while (full_cmds[len])
+		len ++;
+	cmd = ft_parser(ft_lexer(full_cmds[count], env_list));
+	if (len > 1)
+		cmd = ft_many_cmd(cmd, &full_cmds[1], env_list);
+	ft_free_dstr(full_cmds);
 	return (cmd);
 	// while (cmd_table[count])
 	// {
@@ -451,6 +517,7 @@ void	ft_parse_input(char *in_put, char **envp)
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;
+	ft_cmd_analysis(cmd, env_list);
 
 	while (tmp)
 	{
