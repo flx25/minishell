@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/24 11:43:41 by fvon-nag         ###   ########.fr        #
+#    Updated: 2023/04/26 10:30:27 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,8 @@ SOURCES = main.c \
 			export_no_args_2.c \
 			export_w_args.c \
 			buildins.c \
+			buildins_2.c \
+
 
 
 

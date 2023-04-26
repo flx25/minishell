@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/26 09:28:41 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 10:29:41 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,6 @@ char	*ft_getvarvalue(char *arg);
 void	ft_printnextalpha(t_env *envp, int *indexprinted);
 int		ft_cd(char **args, t_env *envp);
 int		ft_pwd(void);
+int		ft_unset(char **args, t_env *envp);
 
 #endif

@@ -6,16 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 09:53:14 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 10:45:35 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //need to set the _= envoirment variable to the last executed programm
-// need to get 'cd ~ (someone told me may not needed)
-//(cd -) (do not think that we need this either)' to work
-// cd needs to change envoirmental list
 void	ft_chdir_envp(t_env *envp)
 {
 	t_env	*tmp;

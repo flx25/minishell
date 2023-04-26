@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/26 09:58:54 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 10:34:54 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -444,4 +444,6 @@ void	ft_parse_input(char *in_put, char **envp)
 		ft_cd(cmd->args, env_list);
 	else if (!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd();
+	else if (!ft_strcmp(cmd->cmd, "unset"))
+		ft_unset(cmd->args, env_list);
 }
