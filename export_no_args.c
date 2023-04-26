@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:32:18 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/25 11:01:22 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 09:04:14 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
 	}
 	return (0);
 }
-
-
 
 void	ft_printinorder(t_env *envp, int *indexprinted)
 {

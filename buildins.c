@@ -6,18 +6,49 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/24 14:19:29 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 09:53:14 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 //need to set the _= envoirment variable to the last executed programm
-// need to get 'cd ~ cd / (cd -)' to work
+// need to get 'cd ~ (someone told me may not needed)
+//(cd -) (do not think that we need this either)' to work
 // cd needs to change envoirmental list
-int	ft_cd(char **args)
+void	ft_chdir_envp(t_env *envp)
+{
+	t_env	*tmp;
+	char	*oldpwd;
+	int		pwdset;
+
+	pwdset = 0;
+	tmp = envp;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->var, "PWD") && !pwdset)
+		{
+			oldpwd = tmp->value;
+			tmp->value = getcwd(NULL, 0);
+			pwdset = 1;
+			tmp = envp;
+		}
+		if (!ft_strcmp(tmp->var, "OLDPWD") && pwdset)
+		{
+			free(tmp->value);
+			tmp->value = oldpwd;
+		}
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return ;
+	}
+}
+
+int	ft_cd(char **args, t_env *envp)
 {
 	struct stat	st;
+	int			chdirrt;
 
 	if (!args || args[0] == NULL)
 		return (printf("cd: expected argument to \"cd\"\n"), 1);
@@ -31,8 +62,13 @@ int	ft_cd(char **args)
 		else if (!S_ISDIR(st.st_mode))
 			return (printf("bash: cd: %s: Not a directory\n", args[0]), 1);
 		else
-			if (chdir(args[0]) == -1)
+		{
+				chdirrt = chdir(args[0]);
+			if (chdirrt == -1)
 				return (perror("cd"), 1);
+			else
+				ft_chdir_envp(envp);
+		}
 	}
 	return (0);
 }
