@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 13:33:26 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/26 14:35:18 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ int	ft_closing_qoutes(char *in_put)
 int	ft_read_prompt(char **envp)
 {
 	char	*str;
+
 	while (true)
 	{
-		str = readline(PROMPT);
+	str = readline(PROMPT);
 		if (!str || !ft_strncmp(str, "exit", ft_strlen(str)))
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
