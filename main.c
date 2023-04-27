@@ -6,11 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/04/24 13:41:35 by melkholy         ###   ########.fr       */
-=======
-/*   Updated: 2023/04/27 10:47:16 by fvon-nag         ###   ########.fr       */
->>>>>>> buildins
+/*   Updated: 2023/04/27 11:24:25 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +64,9 @@ int	ft_read_prompt(char **envp)
 		}
 		add_history(str);
 		if (ft_closing_qoutes(str))
-<<<<<<< HEAD
 			continue ;
 		ft_parse_input(ft_strdup(str), envp); //replace envp with our own somewhere along the way
 		free(str);
-=======
-			return (0);
-		ft_parse_input(ft_strdup(str), envp);
->>>>>>> buildins
 	}
 }
 
