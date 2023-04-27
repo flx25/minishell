@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 09:32:58 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 10:23:25 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ void	ft_freepaths(char **paths);
 int		ft_issyscommand(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
-int		ft_export(char **args, t_env *envp);
+int		ft_export(char **args, t_env **envp);
 int		ft_env(t_env *envp);
-void	ft_addnewnode(char *arg, t_env *tmp);
+void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp);
 int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
 int		ft_checklistlen(t_env *envp);
 void	ft_printinorder(t_env *envp, int *indexprinted);

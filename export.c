@@ -6,18 +6,12 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 09:18:11 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 10:26:56 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//loop caused by // no loop anymore but double variable now error shoul be on export args
-// -> check if it correctly checks for allready existing variables
-//export test
-//export test1
-//export test
-//this one works now without infinite looping but creates two variables listed on echo
 char	*ft_getvarname(char *arg)
 {
 	int		i;
@@ -57,7 +51,7 @@ char	*ft_getvarvalue(char *arg)
 	return (out);
 }
 
-void	ft_export_arg(char **args, t_env *envp, t_env *tmp, int i)
+void	ft_export_arg(char **args, t_env **envp, t_env *tmp, int i)
 {
 	int	foundvar;
 
@@ -74,8 +68,8 @@ void	ft_export_arg(char **args, t_env *envp, t_env *tmp, int i)
 			tmp = tmp->next;
 		}
 		if (!foundvar)
-			ft_addnewnode(args[i], tmp);
-		tmp = envp;
+			ft_addnewnode(args[i], tmp, envp);
+		tmp = *envp;
 		i++;
 		foundvar = 0;
 	}
@@ -94,12 +88,12 @@ void	ft_listvariables(t_env *envp)
 	free(indexprinted);
 }
 
-int	ft_export(char **args, t_env *envp)
+int	ft_export(char **args, t_env **envp)
 {
 	if (args)
-		ft_export_arg(args, envp, envp, 0); // does not work yet when every env variable has been unset before (maybe add an empty one in order to keep it in place)
+		ft_export_arg(args, envp, *envp, 0); // does not work yet when every env variable has been unset before (maybe add an empty one in order to keep it in place)
 	else
-		ft_listvariables(envp);
+		ft_listvariables(*envp);
 	return (0);
 }
 

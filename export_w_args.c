@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:37:20 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/25 10:59:13 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 10:40:35 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_listinenv(char *arg)
 		return (0);
 }
 
-void	ft_addnewnode(char *arg, t_env *tmp)
+void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp)
 {
 	t_env	*node;
 	char	*varname;
@@ -43,8 +43,13 @@ void	ft_addnewnode(char *arg, t_env *tmp)
 		node->value = NULL;
 	if (!ft_listinenv(arg))
 		node->custom = 1;
-	node->index = tmp->index + 1;
-	tmp->next = node;
+	if (*envp)
+	{
+		node->index = tmp->index + 1;
+		tmp->next = node;
+	}
+	else
+		*envp = node;
 	free(varname);
 	free(varvalue);
 }

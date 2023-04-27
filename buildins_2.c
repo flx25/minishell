@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 09:30:51 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 10:08:32 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,54 +28,48 @@ void	ft_rearrange_indexes(t_env *envp)
 			return ;
 	}
 }
-// void	destroy_env_node_setlastnext(t_env *tmp, t_env *tmp_last, t_env *envp)
-// {
 
-// }
+void	ft_unset_loop(t_env *tmp, t_env *tmp_last, t_env **envp, char *arg)
+{
+	int		nodeindex;
+	t_env	*to_free;
 
-//only unset from the ones listed on ENV seems to bug
-//envp pointer gets bugged for first item in list being unset
-// debugger: TERM_PROGRAM
-// launch: SECURITYSESSIONID
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->var, arg))
+		{
+			to_free = tmp;
+			nodeindex = to_free->index;
+			if (tmp_last)
+				tmp_last->next = tmp->next;
+			else
+				*envp = to_free->next;
+			tmp = tmp->next;
+			ft_rearrange_indexes(to_free);
+			free(to_free->var);
+			free(to_free->value);
+			return (free(to_free));
+		}
+		tmp_last = tmp;
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return ;
+	}
+}
 
-// most likely in unset function
 int	ft_unset(char **args, t_env **envp)
 {
 	int		i;
 	t_env	*tmp;
 	t_env	*tmp_last;
-	t_env	*to_free;
-	int		nodeindex;
 
 	tmp_last = NULL;
 	i = 0;
 	while (args[i])
 	{
 		tmp = *envp;
-		while (tmp)
-		{
-			if (!ft_strcmp(tmp->var, args[i]))
-			{
-				// destroy_env_node_setlastnext(tmp, tmp_last, envp);
-				to_free = tmp;
-				nodeindex = to_free->index;
-				if (tmp_last)
-					tmp_last->next = tmp->next;
-				else
-					*envp = to_free->next;
-				tmp = tmp->next;
-				ft_rearrange_indexes(to_free);
-				free(to_free->var);
-				free(to_free->value);
-				free(to_free);
-				break ;
-			}
-			tmp_last = tmp;
-			if (tmp->next)
-				tmp = tmp->next;
-			else
-				break;
-		}
+		ft_unset_loop(tmp, tmp_last, envp, args[i]);
 		i++;
 	}
 	return (0);
