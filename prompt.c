@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 13:33:00 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 15:49:05 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -521,6 +521,25 @@ t_env	*ft_get_envp(char **envp)
 	return (head);
 }
 
+
+void	ft_create_fullcmd(t_cmds *cmd)
+{
+	char	**full_cmd;
+	int		count;
+
+	count = 0;
+	full_cmd = (char **)ft_calloc(1, sizeof(char *));
+	full_cmd[count] = ft_strdup(cmd->cmd);
+	full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);
+	while (cmd->args && cmd->args[count])
+	{
+		full_cmd[count + 1] = ft_strdup(cmd->args[count]);
+		count ++;
+		full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);
+	}
+	cmd->full_cmd = full_cmd;
+}
+
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
@@ -538,10 +557,12 @@ void	ft_parse_input(char *in_put, t_env *env_list)
 	free(in_put);
 	if (!cmd)
 		return ;
+	ft_convertsyscommands(cmd, env_list);
+	ft_create_fullcmd(cmd);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;
-	// ft_cmd_analysis(cmd, env_list);
+	ft_cmd_analysis(cmd, env_list);
 
 	while (tmp)
 	{

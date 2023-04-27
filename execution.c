@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 13:13:26 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 15:56:03 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	ft_infile_fd(t_cmds *cmd)
 
 	infile = 0;
 	status = 0;
+	if (!cmd->from_file)
+		return ;
 	if (access(cmd->from_file, F_OK | R_OK))
 	{
 		if (access(cmd->from_file, F_OK))
@@ -78,6 +80,8 @@ void	ft_outfile_fd(t_cmds *cmd)
 
 	flag = 0;
 	outfile = 0;
+	if (!cmd->to_file)
+		return ;
 	if (cmd->redirect & OUTPUT)
 		flag |= O_TRUNC;
 	else if (cmd->redirect & APPEND)
@@ -95,17 +99,42 @@ void	ft_outfile_fd(t_cmds *cmd)
 	close(outfile);
 }
 
+void	ft_here_doc(t_cmds *cmd)
+{
+	char	*str;
+	char	*delimiter;
+	int		nofile;
+
+	if (!cmd->hdocs_end)
+		return ;
+	delimiter = ft_strjoin(cmd->hdocs_end, "\n");
+	nofile = open("temp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
+	write(1, "heredoc> ", 9);
+	str = get_next_line(0);
+	while (ft_strcmp(str, delimiter))
+	{
+		write(nofile, str, ft_strlen(str));
+		free(str);
+		write(1, "heredoc> ", 9);
+		str = get_next_line(0);
+	}
+	free(str);
+	free(delimiter);
+	close(nofile);
+	nofile = open("temp.txt", O_RDONLY);
+	dup2(nofile, STDIN_FILENO);
+	close(nofile);
+}
+
 void	ft_execute_cmd(t_cmds *cmd, char **env_array)
 {
-	(void) env_array;
 	if ((cmd->redirect & INPUT))
 		ft_infile_fd(cmd);
-	// if ((cmd->redirect & HEREDOC))
-		// printf("Heredoc_end: %s\n", tmp->hdocs_end);
+	if ((cmd->redirect & HEREDOC))
+		ft_here_doc(cmd);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 		ft_outfile_fd(cmd);
-		// printf("To_file: %s\n", tmp->to_file);
-
+	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
 }
 
 void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list)

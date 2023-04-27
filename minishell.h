@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 13:50:15 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 15:34:30 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_cmds
 {
 	char			*cmd;
 	char			**args;
+	char			**full_cmd;
 	char			*from_file;
 	char			*hdocs_end;
 	char			*to_file;
