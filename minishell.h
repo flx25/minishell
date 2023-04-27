@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 11:10:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 11:36:16 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
 char	*ft_join_free_both(char *s1, char *s2);
 char	**ft_double_realloc(char **str, int old_size, int new_size);
+void	ft_free_dstr(char **str);
 
 #endif

@@ -6,25 +6,11 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 10:58:01 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 14:51:27 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 11:35:39 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-void	ft_freepaths(char **paths)
-{
-	int	i;
-
-	i = 0;
-	while (paths[i] != NULL)
-	{
-		free(paths[i]);
-		i++;
-	}
-	free(paths);
-}
 
 int	ft_issyscommand(char *cmd, char **envp)
 {
@@ -34,7 +20,7 @@ int	ft_issyscommand(char *cmd, char **envp)
 	pathnum = 0;
 	paths = ft_getpaths(envp);
 	pathnum = ft_checkpaths(cmd, paths);
-	ft_freepaths(paths);
+	ft_free_dstr(paths);
 	if (pathnum >= 0)
 		return (1);
 	else
