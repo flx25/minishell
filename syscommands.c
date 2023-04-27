@@ -6,12 +6,11 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 09:47:30 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 14:53:23 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:19:13 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 char	*ft_mkpathcommand(char *path, char *command)
 {

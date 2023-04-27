@@ -6,17 +6,48 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/18 11:10:05 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:45:46 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_cd(char **args)
+//need to set the _= envoirment variable to the last executed programm
+void	ft_chdir_envp(t_env *envp)
+{
+	t_env	*tmp;
+	char	*oldpwd;
+	int		pwdset;
+
+	pwdset = 0;
+	tmp = envp;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->var, "PWD") && !pwdset)
+		{
+			oldpwd = tmp->value;
+			tmp->value = getcwd(NULL, 0);
+			pwdset = 1;
+			tmp = envp;
+		}
+		if (!ft_strcmp(tmp->var, "OLDPWD") && pwdset)
+		{
+			free(tmp->value);
+			tmp->value = oldpwd;
+		}
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return ;
+	}
+}
+
+int	ft_cd(char **args, t_env *envp)
 {
 	struct stat	st;
+	int			chdirrt;
 
-	if (args[0] == NULL)
+	if (!args || args[0] == NULL)
 		return (printf("cd: expected argument to \"cd\"\n"), 1);
 	else
 	{
@@ -28,18 +59,32 @@ int	ft_cd(char **args)
 		else if (!S_ISDIR(st.st_mode))
 			return (printf("bash: cd: %s: Not a directory\n", args[0]), 1);
 		else
-			if (chdir(args[0]) == -1)
+		{
+				chdirrt = chdir(args[0]);
+			if (chdirrt == -1)
 				return (perror("cd"), 1);
+			else
+				ft_chdir_envp(envp);
+		}
 	}
 	return (0);
 }
 
-int	ft_env(char **envp)
+int	ft_env(t_env *envp)
 {
-	while (*envp != NULL)
+	t_env	*tmp;
+
+	tmp = envp;
+	while (tmp)
 	{
-		printf("%s\n", *envp);
-		envp++;
+		if (tmp->var && !tmp->custom && tmp->value)
+			printf("%s=%s\n", tmp->var, tmp->value);
+		else if (tmp->var && !tmp->custom && !tmp->value)
+			printf("%s=\n", tmp->var);
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			return (0);
 	}
 	return (0);
 }
@@ -49,14 +94,14 @@ int	ft_echo(char **args)
 	int	i;
 	int	nl;
 
-	i = 1;
+	i = 0;
 	nl = 1;
-	if (!args[0])
+	if (!args)
 	{
 		printf("\n");
 		return (0);
 	}
-	if (!strcmp(args[1], "-n"))
+	if (!strcmp(args[0], "-n"))
 	{
 		nl = 0;
 		i++;

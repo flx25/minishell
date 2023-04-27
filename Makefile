@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/04/24 19:15:58 by melkholy         ###   ########.fr        #
+#    Updated: 2023/04/27 11:12:04 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,13 @@ SOURCES = main.c \
 			signals.c \
 			syscommands.c \
 			syscommands_utils.c \
-			execution.c
+			export.c \
+			export_no_args.c \
+			export_no_args_2.c \
+			export_w_args.c \
+			buildins.c \
+			buildins_2.c \
+			execution.c \
 
 
 

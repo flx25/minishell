@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 01:14:50 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 11:10:56 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_env
 	char			*var;
 	char			*value;
 	struct s_env	*next;
+	int				custom;
 }				t_env;
 
 /* A global variable to store the term attributes and exit status */
@@ -71,6 +72,24 @@ void	ft_freepaths(char **paths);
 int		ft_issyscommand(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
+int		ft_export(char **args, t_env **envp);
+int		ft_env(t_env *envp);
+void	ft_addnewnode(char *arg, t_env *tmp, t_env **envp);
+int		ft_check_and_edit_existing_var(char **args, t_env *tmp, int i);
+int		ft_checklistlen(t_env *envp);
+void	ft_printinorder(t_env *envp, int *indexprinted);
+int		ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars);
+int		ft_isbeforeinalph(char *varname, char *tmpvar);
+int		ft_isvalididentifier(char c);
+int		ft_checkforwrongargs(char **args);
+void	ft_setindexprinted(t_env *envp, int index, int *indexprinted);
+char	*ft_getvarname(char *arg);
+char	*ft_getvarvalue(char *arg);
+void	ft_printnextalpha(t_env *envp, int *indexprinted);
+int		ft_cd(char **args, t_env *envp);
+int		ft_pwd(void);
+int		ft_unset(char **args, t_env **envp);
+int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
 char	*ft_join_free_both(char *s1, char *s2);
 char	**ft_double_realloc(char **str, int old_size, int new_size);

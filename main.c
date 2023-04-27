@@ -6,13 +6,17 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/04/24 13:41:35 by melkholy         ###   ########.fr       */
+=======
+/*   Updated: 2023/04/27 10:47:16 by fvon-nag         ###   ########.fr       */
+>>>>>>> buildins
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
-
+//programm terminates if unlosed quotes are detected
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
@@ -49,7 +53,7 @@ int	ft_read_prompt(char **envp)
 
 	while (true)
 	{
-		str = readline(PROMPT);
+	str = readline(PROMPT);
 		if (!str || !ft_strncmp(str, "exit", ft_strlen(str)))
 		{
 			tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
@@ -64,9 +68,14 @@ int	ft_read_prompt(char **envp)
 		}
 		add_history(str);
 		if (ft_closing_qoutes(str))
+<<<<<<< HEAD
 			continue ;
 		ft_parse_input(ft_strdup(str), envp); //replace envp with our own somewhere along the way
 		free(str);
+=======
+			return (0);
+		ft_parse_input(ft_strdup(str), envp);
+>>>>>>> buildins
 	}
 }
 
