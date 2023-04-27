@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 13:10:30 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 13:33:00 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,6 +331,16 @@ void	ft_free_dstr(char **str)
 	free(str);
 }
 
+char	**ft_check_args(char *arg, char **cmd_args)
+{
+	if (!arg)
+	{
+		free(cmd_args);
+		return (NULL);
+	}
+	return (cmd_args);
+}
+
 t_cmds	*ft_parser(char **cmd_table)
 {
 	t_cmds	*cmd;
@@ -350,6 +360,7 @@ t_cmds	*ft_parser(char **cmd_table)
 	cmd->args = (char **)ft_calloc(1, sizeof(char *));
 	if (!cmd->args)
 		return (NULL);
+	cmd->args = ft_check_args(cmd_table[count + 1], cmd->args);
 	while (cmd_table[++count])
 	{
 		cmd->args[count - 1] = ft_strdup(cmd_table[count]);
