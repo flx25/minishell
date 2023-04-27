@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/24 19:15:27 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 01:14:50 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 # include <string.h>
 # include <unistd.h>
 # include <termios.h>
@@ -71,5 +72,7 @@ int		ft_issyscommand(char *cmd, char **envp);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_isnonsyscommand(char *arg);
 void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
+char	*ft_join_free_both(char *s1, char *s2);
+char	**ft_double_realloc(char **str, int old_size, int new_size);
 
 #endif

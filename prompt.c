@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/26 14:43:32 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 02:21:19 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ char	*ft_expansion(char *str, t_env *env_list)
 	t_env	*tmp;
 
 	tmp = env_list;
+	if (!str)
+		return (ft_strdup("$"));
 	while (tmp)
 	{
 		if (!ft_strncmp(str, tmp->var, ft_strlen(str)))
@@ -514,10 +516,12 @@ void	ft_parse_input(char *in_put, char **envp)
 	env_list = ft_get_envp(envp);
 	cmd = ft_text_analysis(&in_put[count], env_list);
 	free(in_put);
+	if (!cmd)
+		return ;
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
 	tmp = cmd;
-	ft_cmd_analysis(cmd, env_list);
+	// ft_cmd_analysis(cmd, env_list);
 
 	while (tmp)
 	{
