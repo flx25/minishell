@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 09:47:30 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 11:34:22 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 13:55:33 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,28 @@ int	ft_checkpaths(char *command, char **paths)
 	return (-1);
 }
 
-char	**ft_getpaths(char **envp)
+char	**ft_getpaths(t_env *envp)
 {
-	int		i;
+	t_env	*tmp;
 	char	**out;
-// adapt for linked list
-	i = 0;
-	while (envp[i] != NULL && !ft_strnstr(envp[i], "PATH=", 5))
-		i++;
-	out = ft_split(envp[i], ':');
-	return (out);
+
+	tmp = envp;
+	while (tmp)
+	{
+		if (!strcmp("PATH", tmp->var))
+		{
+			out = ft_split(tmp->value, ':');
+			return (out);
+		}
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			break ;
+	}
+	return (NULL);
 }
 
-void	ft_convertsyscommands(t_cmds *cmd, char **envp)
+void	ft_convertsyscommands(t_cmds *cmd, t_env *envp)
 {
 	int		i;
 	char	**paths;
@@ -71,11 +80,11 @@ void	ft_convertsyscommands(t_cmds *cmd, char **envp)
 			if (pathnum >= 0)
 			{
 				temp = ft_mkpathcommand(paths[pathnum], tmp->cmd);
-				//do not think i need to free anything because linked list (true?)
+				free(tmp->cmd);
 				tmp->cmd = temp;
 			}
 		}
 		tmp = tmp->next;
 	}
-	ft_freepaths(paths);
+	ft_free_dstr(paths);
 }

@@ -6,13 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 10:58:01 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 11:35:39 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 13:49:58 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_issyscommand(char *cmd, char **envp)
+int	ft_issyscommand(char *cmd, t_env *envp)
 {
 	char	**paths;
 	int		pathnum;
