@@ -6,12 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 11:18:55 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 13:10:30 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Libft/libft.h"
 #include "minishell.h"
+#include <stdio.h>
 #include <string.h>
 
 /* Used to ignore all white spaces and return the first idnex after them */
@@ -49,9 +50,11 @@ char	*ft_expansion(char *str, t_env *env_list)
 	tmp = env_list;
 	if (!str)
 		return (ft_strdup("$"));
+	if (!ft_strcmp(str, "?"))
+		return (ft_itoa(g_term_attr.status));
 	while (tmp)
 	{
-		if (!ft_strncmp(str, tmp->var, ft_strlen(str)))
+		if (!ft_strcmp(str, tmp->var))
 		{
 			free(str);
 			return (ft_strdup(tmp->value));
@@ -146,7 +149,8 @@ char	*ft_getenv_var(char *in_put, int *index, t_env *env_list)
 
 	count = *index;
 	str = NULL;
-	while (in_put[++count] && ft_isalnum(in_put[count]))
+	while (in_put[++count] && (in_put[count] == '_' || in_put[count] == '?'
+			|| ft_isalnum(in_put[count])))
 		str = ft_join_free_both(str, ft_substr(&in_put[count], 0, 1));
 	*index = count - 1;
 	return (ft_expansion(str, env_list));
@@ -231,6 +235,13 @@ char	**ft_lexer(char *in_put, t_env *env_list)
 	return (cmd_table);
 }
 
+char	*ft_add_io_file(char *old_file, char *new_file, int len)
+{
+	if (old_file)
+		free(old_file);
+	return (ft_substr(new_file, len, ft_strlen(new_file)));
+}
+
 int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
 {
 	int	count;
@@ -249,11 +260,11 @@ int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
 		index ++;
 	}
 	if ((redirect & INPUT) == INPUT)
-		cmd->from_file = ft_substr(table[index], len, ft_strlen(table[index]));
+		cmd->from_file = ft_add_io_file(cmd->from_file, table[index], len);
 	else if ((redirect & HEREDOC) == HEREDOC)
-		cmd->hdocs_end = ft_substr(table[index], len, ft_strlen(table[index]));
+		cmd->hdocs_end = ft_add_io_file(cmd->hdocs_end, table[index], len);
 	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
-		cmd->to_file = ft_substr(table[index], len, ft_strlen(table[index]));
+		cmd->to_file = ft_add_io_file(cmd->to_file, table[index], len);
 	return (0);
 }
 
@@ -502,18 +513,16 @@ t_env	*ft_get_envp(char **envp)
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
-void	ft_parse_input(char *in_put, char **envp)
+void	ft_parse_input(char *in_put, t_env *env_list)
 {
 	t_cmds	*cmd;
 	t_cmds	*tmp;
-	t_env	*env_list;
 	int		count;
 
 	count = 0;
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	env_list = ft_get_envp(envp);
 	cmd = ft_text_analysis(&in_put[count], env_list);
 	free(in_put);
 	if (!cmd)

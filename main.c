@@ -6,12 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 11:24:25 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 12:57:26 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
+
 //programm terminates if unlosed quotes are detected
 int	ft_closing_qoutes(char *in_put)
 {
@@ -42,30 +43,50 @@ int	ft_closing_qoutes(char *in_put)
 	return (0);
 }
 
+void	ft_free_envlist(t_env **env_list)
+{
+	t_env	*tmp;
+
+	tmp = *env_list;
+	while (tmp)
+	{
+		*env_list = (*env_list)->next;
+		free(tmp);
+		tmp = *env_list;
+	}
+}
+
+void	ft_exit_minihell(char *str, t_env *env_list)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
+	if (!str)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	free(str);
+	ft_free_envlist(&env_list);
+	write(1, "exit\n", 5);
+	clear_history();
+	exit(0);
+}
+
 /* Used to display the prompt and read the input from the user */
 int	ft_read_prompt(char **envp)
 {
 	char	*str;
+	t_env	*env_list;
 
+	env_list = ft_get_envp(envp);
 	while (true)
 	{
 	str = readline(PROMPT);
-		if (!str || !ft_strncmp(str, "exit", ft_strlen(str)))
-		{
-			tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
-			if (!str)
-			{
-				rl_on_new_line();
-				rl_redisplay();
-			}
-			write(1, "exit\n", 5);
-			clear_history();
-			exit(0);
-		}
+		if (!str || !ft_strcmp(str, "exit"))
+			ft_exit_minihell(str, env_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;
-		ft_parse_input(ft_strdup(str), envp); //replace envp with our own somewhere along the way
+		ft_parse_input(ft_strdup(str), env_list);
 		free(str);
 	}
 }

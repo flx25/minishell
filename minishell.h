@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 11:10:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 12:45:17 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_term
 
 t_term	g_term_attr;
 
-void	ft_parse_input(char *in_put, char **envp);
+void	ft_parse_input(char *in_put, t_env *env_list);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
 void	ft_convertsyscommands(t_cmds *cmd, char **envp);
@@ -93,5 +93,7 @@ int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list);
 char	*ft_join_free_both(char *s1, char *s2);
 char	**ft_double_realloc(char **str, int old_size, int new_size);
+t_env	*ft_get_envp(char **envp);
+t_env	*ft_create_envnode(char *envp, int index);
 
 #endif
