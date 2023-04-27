@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 09:47:30 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 09:19:13 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 11:34:22 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_checkpaths(char *command, char **paths)
 {
 	int		i;
 	char	*pathcommand;
-
+	//need to check for execution/existance seperately
 	i = 0;
 	while (paths[i])
 	{
@@ -44,7 +44,7 @@ char	**ft_getpaths(char **envp)
 {
 	int		i;
 	char	**out;
-
+// adapt for linked list
 	i = 0;
 	while (envp[i] != NULL && !ft_strnstr(envp[i], "PATH=", 5))
 		i++;

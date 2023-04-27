@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 12:51:50 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/27 13:13:26 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list)
 
 	if (ft_cmd_size(cmd) > 1)
 		return ;
-	if (!ft_isnonsyscommand(cmd->cmd))
-		return ;
+	// if (!ft_isnonsyscommand(cmd->cmd))
+	// 	return ;
 	env_array = ft_create_env_array(env_list);
 	pid = fork();
 	if (pid == 0)
