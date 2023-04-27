@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:38:13 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 15:53:15 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:40:46 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_checkforwrongargs(char **args)
 		return (0);
 }
 
-
 void	ft_setindexprinted(t_env *envp, int index, int *indexprinted)
 {
 	t_env	*tmp;
@@ -48,7 +47,7 @@ void	ft_setindexprinted(t_env *envp, int index, int *indexprinted)
 	tmp = envp;
 	while (tmp)
 	{
-		if (index == tmp->index) //compares incorrecly maybe function does not count to the highest index
+		if (index == tmp->index)
 		{
 			indexprinted[tmp->index] = 1;
 			return ;

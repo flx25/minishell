@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 15:39:36 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:18:11 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ char	*ft_getvarvalue(char *arg)
 	i++;
 	while (arg[i])
 		out[j++] = arg[i++];
-
 	return (out);
 }
 

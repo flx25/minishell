@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 10:45:35 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:45:46 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,14 +94,14 @@ int	ft_echo(char **args)
 	int	i;
 	int	nl;
 
-	i = 1;
+	i = 0;
 	nl = 1;
-	if (!args[0])
+	if (!args)
 	{
 		printf("\n");
 		return (0);
 	}
-	if (!strcmp(args[1], "-n"))
+	if (!strcmp(args[0], "-n"))
 	{
 		nl = 0;
 		i++;

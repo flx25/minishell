@@ -6,28 +6,17 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 15:35:15 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/27 09:30:51 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_rearrange_indexes(int del_index, t_env *envp)
+void	ft_rearrange_indexes(t_env *envp)
 {
 	t_env	*tmp;
-	// int		i;
 
 	tmp = envp;
-	// i = 0;
-	(void) del_index;
-	//need to see how to handle last node
-	// while (tmp->index < del_index)
-	// {
-	// 	if (tmp->next)
-	// 		tmp = tmp->next;
-	// 	else
-	// 		break ;
-	// }
 	if (!tmp->next)
 		return ;
 	while (tmp)
@@ -75,7 +64,7 @@ int	ft_unset(char **args, t_env **envp)
 				else
 					*envp = to_free->next;
 				tmp = tmp->next;
-				ft_rearrange_indexes(nodeindex, to_free); //does not work for first rm this way
+				ft_rearrange_indexes(to_free);
 				free(to_free->var);
 				free(to_free->value);
 				free(to_free);
