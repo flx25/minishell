@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 13:54:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 15:48:53 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,13 @@ int	ft_read_prompt(char **envp)
 	env_list = ft_get_envp(envp);
 	while (true)
 	{
-	str = readline(PROMPT);
+		str = readline(PROMPT);
 		if (!str || !ft_strcmp(str, "exit"))
 			ft_exit_minihell(str, env_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;
-		ft_parse_input(ft_strdup(str), env_list);
+		ft_parse_input(ft_strdup(str), &env_list);
 		free(str);
 	}
 }

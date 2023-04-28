@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 14:05:06 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 15:50:40 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -543,7 +543,7 @@ void	ft_create_fullcmd(t_cmds *cmd)
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
-void	ft_parse_input(char *in_put, t_env *env_list)
+void	ft_parse_input(char *in_put, t_env **env_list)
 {
 	t_cmds	*cmd;
 	t_cmds	*tmp;
@@ -553,11 +553,11 @@ void	ft_parse_input(char *in_put, t_env *env_list)
 	count += ft_isnspace_indx(in_put);
 	if (!in_put[count])
 		return ;
-	cmd = ft_text_analysis(&in_put[count], env_list);
+	cmd = ft_text_analysis(&in_put[count], *env_list);
 	free(in_put);
 	if (!cmd)
 		return ;
-	ft_convertsyscommands(cmd, env_list);
+	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
