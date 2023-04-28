@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 09:45:46 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 12:59:18 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,22 @@ int	ft_env(t_env *envp)
 	return (0);
 }
 
+int	ft_is_dash_n(char	*arg)
+{
+	int	i;
+
+	i = 1;
+	if (arg[0] != '-')
+		return (0);
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	ft_echo(char **args)
 {
 	int	i;
@@ -101,7 +117,7 @@ int	ft_echo(char **args)
 		printf("\n");
 		return (0);
 	}
-	if (!strcmp(args[0], "-n"))
+	if (ft_is_dash_n(args[0]))
 	{
 		nl = 0;
 		i++;
@@ -115,18 +131,5 @@ int	ft_echo(char **args)
 	}
 	if (nl == 1)
 		printf("\n");
-	return (0);
-}
-
-int	ft_pwd(void)
-{
-	char	*pwd;
-
-	pwd = ft_calloc(1024, sizeof(char));
-	if (!pwd)
-		return (1);
-	pwd = getcwd(NULL, 0);
-	printf("%s\n", pwd);
-	free(pwd);
 	return (0);
 }

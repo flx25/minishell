@@ -6,14 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 12:57:26 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/28 09:27:34 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-//programm terminates if unlosed quotes are detected
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;

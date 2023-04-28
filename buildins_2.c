@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 10:08:32 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 12:57:23 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,18 @@ int	ft_unset(char **args, t_env **envp)
 		ft_unset_loop(tmp, tmp_last, envp, args[i]);
 		i++;
 	}
+	return (0);
+}
+
+int	ft_pwd(void)
+{
+	char	*pwd;
+
+	pwd = ft_calloc(1024, sizeof(char));
+	if (!pwd)
+		return (1);
+	pwd = getcwd(NULL, 0);
+	printf("%s\n", pwd);
+	free(pwd);
 	return (0);
 }
