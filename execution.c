@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 15:47:18 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 18:09:48 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,5 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 		wait(NULL);
 	}
 	else
-		ft_execute_buildin(cmd, env_list);
-
-	//segfaulting when trying to acess env after set in export (with $ but not when listing with export)
+		ft_execute_buildin(cmd, env_list); //here causes segfault with envs
 }

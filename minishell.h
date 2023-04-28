@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 15:49:20 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 18:05:43 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,6 @@ t_env	*ft_get_envp(char **envp);
 t_env	*ft_create_envnode(char *envp, int index);
 void	ft_free_dstr(char **str);
 int		ft_isnspace_indx(char *in_put);
+void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
 
 #endif

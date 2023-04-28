@@ -6,14 +6,17 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 15:48:53 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/04/28 18:09:21 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-//launching ./minishell works just fine with system commands, maybe buildin implementation
+// using an unused variable will input Command: /Users/fvon-nag/goinfre/.brew/bin/
+// most likely an null edge case for ft_tokennize could fix this
+// still segfautling for $variables
+// most likely due to the placement of buildin execution
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
