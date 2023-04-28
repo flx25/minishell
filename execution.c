@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/27 15:56:03 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/04/28 14:06:37 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,22 @@ int	ft_cmd_size(t_cmds *cmd)
 		count ++;
 	}
 	return (count);
+}
+
+void	ft_execute_buildin(t_cmds *cmd, t_env	*env_list)
+{
+	if (!ft_strcmp(cmd->cmd, "export"))
+		ft_export(cmd->args, &env_list);
+	else if (!ft_strcmp(cmd->cmd, "env"))
+		ft_env(env_list);
+	else if (!ft_strcmp(cmd->cmd, "cd"))
+		ft_cd(cmd->args, env_list);
+	else if (!ft_strcmp(cmd->cmd, "pwd"))
+		ft_pwd();
+	else if (!ft_strcmp(cmd->cmd, "unset"))
+		ft_unset(cmd->args, &env_list);
+	else if (!ft_strcmp(cmd->cmd, "echo"))
+		ft_echo(cmd->args);
 }
 
 char	**ft_create_env_array(t_env	*env_list)
@@ -144,11 +160,14 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env *env_list)
 
 	if (ft_cmd_size(cmd) > 1)
 		return ;
-	// if (!ft_isnonsyscommand(cmd->cmd))
-	// 	return ;
 	env_array = ft_create_env_array(env_list);
-	pid = fork();
-	if (pid == 0)
-		ft_execute_cmd(cmd, env_array);
-	wait(NULL);
+	if (!ft_isnonsyscommand(cmd->full_cmd[0]))
+	{
+		pid = fork();
+		if (pid == 0)
+			ft_execute_cmd(cmd, env_array);
+		wait(NULL);
+	}
+	else
+		ft_execute_buildin(cmd, env_list);
 }

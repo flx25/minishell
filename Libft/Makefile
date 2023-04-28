@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: solariscode <solariscode@student.42.fr>    +#+  +:+       +#+         #
+#    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/11 21:15:11 by melkholy          #+#    #+#              #
-#    Updated: 2023/04/24 19:20:36 by melkholy         ###   ########.fr        #
+#    Updated: 2023/04/28 13:24:17 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 NAME = libft.a
 CDIRS = .
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 CFILES = ft_atoi.c ft_isdigit.c ft_memchr.c ft_putendl_fd.c \
 			ft_striteri.c ft_strncmp.c ft_toupper.c ft_bzero.c \
