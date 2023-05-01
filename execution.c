@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 18:09:48 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:28:22 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,13 @@ char	**ft_create_env_array(t_env	*env_list)
 	while (tmp_list)
 	{
 		str = NULL;
-		str = ft_join_free_both(ft_strdup(tmp_list->var), ft_strdup("="));
-		str = ft_join_free_both(str, ft_strdup(tmp_list->value));
-		env_array[++index] = str;
-		env_array = ft_double_realloc(env_array, index + 1, index + 2);
+		if (!tmp_list->custom)
+		{
+			str = ft_join_free_both(ft_strdup(tmp_list->var), ft_strdup("="));
+			str = ft_join_free_both(str, ft_strdup(tmp_list->value));
+			env_array[++index] = str;
+			env_array = ft_double_realloc(env_array, index + 1, index + 2);
+		}
 		tmp_list = tmp_list->next;
 	}
 	return (env_array);
@@ -158,15 +161,18 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 	char	**env_array;
 	int		pid;
 
+	printf("test: %s, full: %s\n", cmd->cmd, cmd->full_cmd[0]);
 	if (ft_cmd_size(cmd) > 1)
 		return ;
-	if (!ft_isnonsyscommand(cmd->full_cmd[0]))
+	if (!ft_isnonsyscommand(cmd->cmd))
 	{
 		env_array = ft_create_env_array(*env_list);
 		pid = fork();
 		if (pid == 0)
 			ft_execute_cmd(cmd, env_array);
 		wait(NULL);
+		ft_free_cmdlist(&cmd);
+		ft_free_dstr(env_array);
 	}
 	else
 		ft_execute_buildin(cmd, env_list); //here causes segfault with envs

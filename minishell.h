@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 18:05:43 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:10:44 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_env
 	int				index;
 	char			*var;
 	char			*value;
-	struct s_env	*next;
 	int				custom;
+	struct s_env	*next;
 }				t_env;
 
 /* A global variable to store the term attributes and exit status */
@@ -99,5 +99,6 @@ t_env	*ft_create_envnode(char *envp, int index);
 void	ft_free_dstr(char **str);
 int		ft_isnspace_indx(char *in_put);
 void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
+void	ft_free_cmdlist(t_cmds **cmds);
 
 #endif

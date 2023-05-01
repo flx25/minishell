@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 18:11:21 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:33:14 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	*ft_expansion(char *str, t_env *env_list)
 		if (!ft_strcmp(str, tmp->var))
 		{
 			free(str);
+			if (!env_list->custom)
+				return (ft_strdup("\n"));
 			return (ft_strdup(tmp->value));
 		}
 		tmp = tmp->next;
@@ -378,6 +380,18 @@ void	ft_free_cmdlist(t_cmds **cmds)
 	while (tmp)
 	{
 		*cmds = (*cmds)->next;
+		if (tmp->cmd)
+			free(tmp->cmd);
+		if (tmp->args)
+			ft_free_dstr(tmp->args);
+		if (tmp->full_cmd)
+			ft_free_dstr(tmp->full_cmd);
+		if ((tmp->redirect & INPUT))
+			free(tmp->from_file);
+		if ((tmp->redirect & HEREDOC))
+			free(tmp->hdocs_end);
+		if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
+			free(tmp->to_file);
 		free(tmp);
 		tmp = *cmds;
 	}
@@ -546,7 +560,7 @@ void	ft_create_fullcmd(t_cmds *cmd)
 void	ft_parse_input(char *in_put, t_env **env_list)
 {
 	t_cmds	*cmd;
-	t_cmds	*tmp;
+	// t_cmds	*tmp;
 	int		count;
 
 	count = 0;
@@ -561,26 +575,26 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	ft_create_fullcmd(cmd);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/
-	tmp = cmd;
+	// tmp = cmd;
 	ft_cmd_analysis(cmd, env_list);
 
-	while (tmp)
-	{
-		count = 0;
-		printf("Command: %s\n", tmp->cmd);
-		while (tmp->args && tmp->args[count])
-		{
-			printf("Arg %d: %s\n", count, tmp->args[count]);
-			count ++;
-		}
-		if ((tmp->redirect & INPUT))
-			printf("From_file: %s\n", tmp->from_file);
-		if ((tmp->redirect & HEREDOC))
-			printf("Heredoc_end: %s\n", tmp->hdocs_end);
-		if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
-			printf("To_file: %s\n", tmp->to_file);
-		tmp = tmp->next;
-	}
+	// while (tmp)
+	// {
+	// 	count = 0;
+	// 	printf("Command: %s\n", tmp->cmd);
+	// 	while (tmp->args && tmp->args[count])
+	// 	{
+	// 		printf("Arg %d: %s\n", count, tmp->args[count]);
+	// 		count ++;
+	// 	}
+	// 	if ((tmp->redirect & INPUT))
+	// 		printf("From_file: %s\n", tmp->from_file);
+	// 	if ((tmp->redirect & HEREDOC))
+	// 		printf("Heredoc_end: %s\n", tmp->hdocs_end);
+	// 	if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
+	// 		printf("To_file: %s\n", tmp->to_file);
+	// 	tmp = tmp->next;
+	// }
 
 	// ft_execute_buildin(cmd, env_list); //placing this here causes no problems
 }
