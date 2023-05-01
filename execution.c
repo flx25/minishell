@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 14:28:22 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:50:58 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,5 +175,8 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 		ft_free_dstr(env_array);
 	}
 	else
+	{
 		ft_execute_buildin(cmd, env_list); //here causes segfault with envs
+		ft_free_cmdlist(&cmd);
+	}
 }

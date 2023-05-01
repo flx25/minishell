@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/28 18:09:21 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:46:18 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ void	ft_free_envlist(t_env **env_list)
 	while (tmp)
 	{
 		*env_list = (*env_list)->next;
+		if (tmp->var)
+			free(tmp->var);
+		if (tmp->value)
+			free(tmp->value);
 		free(tmp);
 		tmp = *env_list;
 	}
