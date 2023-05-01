@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:27:37 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/01 16:47:01 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,11 @@ void	ft_execute_cmd(t_cmds *cmd, char **env_array)
 		ft_here_doc(cmd);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 		ft_outfile_fd(cmd);
-	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
+	if (execve(cmd->full_cmd[0], cmd->full_cmd, env_array))
+	{
+		printf("minihell: %s:%s\n", strerror(errno), cmd->cmd);
+		exit(1);
+	}
 }
 
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)

@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:41:54 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 15:45:56 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/01 16:37:33 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_expansion(char *str, t_env *env_list)
 		if (!ft_strcmp(str, tmp->var))
 		{
 			free(str);
-			if (!env_list->custom)
+			if (!env_list->custom && !tmp->value)
 				return (ft_strdup("\n"));
 			return (ft_strdup(tmp->value));
 		}

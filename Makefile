@@ -6,12 +6,9 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/05/01 16:26:53 by melkholy         ###   ########.fr        #
+#    Updated: 2023/05/01 17:19:11 by melkholy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-
-
 
 
 SOURCES = main.c \
@@ -33,23 +30,24 @@ SOURCES = main.c \
 
 
 NAME = minishell
+LIBFT = ./Libft/libft.a
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g -I $(HOME)/goinfre/.brew/opt/readline/include/
 
-$(NAME): libft
-	$(CC) $(CFLAGS) -o $@ $(SOURCES) -LLibft -lft -L $(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline
-
 all: $(NAME)
 
-libft:
-	+make -C Libft
+$(NAME): $(LIBFT)
+	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(SOURCES) -o $(NAME)
+
+$(LIBFT):
+	make -C Libft
 
 clean:
-	rm -f $(OBJECTS) $(BOBJECTS) $(EXECUTABLES).o
-	+make -C Libft clean
+	make -C Libft clean
 
 fclean: clean
-	rm -rf $(NAME) Libft/libft.a $(EXECUTABLES) minishell.dSYM
+	make fclean -C Libft
+	rm -rf $(NAME) minishell.dSYM
 
 re: fclean all
 
