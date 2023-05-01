@@ -6,13 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 14:50:58 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/01 16:27:37 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Libft/libft.h"
 #include "minishell.h"
-# include <fcntl.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 int	ft_cmd_size(t_cmds *cmd)
@@ -161,7 +161,6 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 	char	**env_array;
 	int		pid;
 
-	printf("test: %s, full: %s\n", cmd->cmd, cmd->full_cmd[0]);
 	if (ft_cmd_size(cmd) > 1)
 		return ;
 	if (!ft_isnonsyscommand(cmd->cmd))

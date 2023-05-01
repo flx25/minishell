@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 14:10:44 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/01 16:19:02 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ typedef struct s_term
 
 t_term	g_term_attr;
 
-void	ft_parse_input(char *in_put, t_env **env_list);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
 void	ft_convertsyscommands(t_cmds *cmd, t_env *envp);
@@ -92,13 +91,42 @@ int		ft_pwd(void);
 int		ft_unset(char **args, t_env **envp);
 int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list);
-char	*ft_join_free_both(char *s1, char *s2);
-char	**ft_double_realloc(char **str, int old_size, int new_size);
+void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
+
+/* input_analysis.c */
+void	ft_parse_input(char *in_put, t_env **env_list);
+void	ft_create_fullcmd(t_cmds *cmd);
 t_env	*ft_get_envp(char **envp);
 t_env	*ft_create_envnode(char *envp, int index);
-void	ft_free_dstr(char **str);
-int		ft_isnspace_indx(char *in_put);
-void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
 void	ft_free_cmdlist(t_cmds **cmds);
+
+/* lexer.c */
+char	*ft_expansion(char *str, t_env *env_list);
+char	*ft_getenv_var(char *in_put, int *index, t_env *env_list);
+char	*ft_inside_qoutes(char *str, char *in_put,
+		int *index, t_env *env_list);
+char	*ft_tokenize(char *str, char *in_put, int *index, t_env *env_list);
+char	**ft_lexer(char *in_put, t_env *env_list);
+
+/* parsing_redirection.c */
+char	*ft_add_io_file(char *old_file, char *new_file, int len);
+void	ft_arrange_table(char **table, int index, int len);
+int		ft_add_redirection(char **table, t_cmds *cmd, int index, int len);
+int		ft_get_redirection(char *in_put);
+int		ft_check_redirect(t_cmds *cmd, char **cmd_table);
+
+/* parser.c */
+t_cmds	*ft_parser(char **cmd_table);
+t_cmds	*ft_many_cmd(t_cmds *cmd, char **full_cmds, t_env *env_list);
+char	*ft_cut_input(char *in_put, int *index);
+char	**ft_check_pipe_char(char *in_put);
+t_cmds	*ft_text_analysis(char *in_put, t_env *env_list);
+
+/* parsing_utils.c */
+int		ft_isnspace_indx(char *in_put);
+void	ft_free_dstr(char **str);
+char	**ft_check_args(char *arg, char **cmd_args);
+char	**ft_double_realloc(char **str, int old_size, int new_size);
+char	*ft_join_free_both(char *s1, char *s2);
 
 #endif
