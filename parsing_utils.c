@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:57:11 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 15:59:34 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/02 18:56:29 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ void	ft_free_dstr(char **str)
 	int	count;
 
 	count = 0;
-	while (str && str[count])
+	if (!str)
+		return ;
+	while (str[count])
 	{
 		free(str[count]);
 		count ++;
@@ -54,6 +56,8 @@ char	**ft_double_realloc(char **str, int old_size, int new_size)
 	char	**tmp;
 	int		count;
 
+	// if (!str)
+	// 	return ((char **)ft_calloc(new_size, sizeof(char *)));
 	tmp = (char **)ft_calloc(new_size, sizeof(char *));
 	count = 0;
 	while (count < old_size)

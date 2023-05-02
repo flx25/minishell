@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:04:48 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:58:12 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void	ft_free_cmdlist(t_cmds **cmds)
 		if ((tmp->redirect & INPUT))
 			free(tmp->from_file);
 		if ((tmp->redirect & HEREDOC))
-			free(tmp->hdocs_end);
+			ft_free_dstr(tmp->hdocs_end);
 		if ((tmp->redirect & OUTPUT) || (tmp->redirect & APPEND))
-			free(tmp->to_file);
+			ft_free_dstr(tmp->to_file);
 		free(tmp);
 		tmp = *cmds;
 	}
@@ -127,6 +127,8 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	int		count;
 
 	count = 0;
+	if (!cmd->cmd)
+		return ;
 	full_cmd = (char **)ft_calloc(1, sizeof(char *));
 	full_cmd[count] = ft_strdup(cmd->cmd);
 	full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);

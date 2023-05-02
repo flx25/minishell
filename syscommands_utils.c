@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 10:58:01 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/05/01 14:29:55 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/02 17:46:31 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	ft_isnonsyscommand(char *arg)
 {
+	if (!arg)
+		return (0);
 	if (!ft_strcmp(arg, "echo") || !ft_strcmp(arg, "cd")
 		|| !ft_strcmp(arg, "pwd") || !ft_strcmp(arg, "export")
 		|| !ft_strcmp(arg, "unset") || !ft_strcmp(arg, "env")

@@ -6,10 +6,11 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:48:07 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 15:50:31 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/03 01:17:42 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Libft/libft.h"
 #include "minishell.h"
 
 char	*ft_add_io_file(char *old_file, char *new_file, int len)
@@ -17,6 +18,28 @@ char	*ft_add_io_file(char *old_file, char *new_file, int len)
 	if (old_file)
 		free(old_file);
 	return (ft_substr(new_file, len, ft_strlen(new_file)));
+}
+
+char	**ft_many_redirect(char **old_files, char *new_file, int len)
+{
+	char	**files;
+	int		size;
+
+	size = 0;
+	if (!old_files)
+	{
+		files = (char **)ft_calloc(1, sizeof(char *));
+		if (!files)
+			return (NULL);
+		files[0] = ft_substr(new_file, len, ft_strlen(new_file));
+		files = ft_double_realloc(files, 1, 2);
+		return (files);
+	}
+	while (old_files[size])
+		size ++;
+	files = ft_double_realloc(old_files, size, size + 2);
+	files[size] = ft_substr(new_file, len, ft_strlen(new_file));
+	return (files);
 }
 
 void	ft_arrange_table(char **table, int index, int len)
@@ -50,18 +73,20 @@ int	ft_add_redirection(char **table, t_cmds *cmd, int index, int len)
 			table[index][count] == '>'))
 		count ++;
 	if (count != len)
-		return (1);
+		return (printf("%s `%c'\n", DIRECTION_ERR, table[index][0]), 1);
 	if (!table[index][len])
 	{
 		len = 0;
 		index ++;
 	}
+	if (!table[index])
+		return (printf("%s `newline'\n", DIRECTION_ERR), 1);
 	if ((redirect & INPUT) == INPUT)
 		cmd->from_file = ft_add_io_file(cmd->from_file, table[index], len);
 	else if ((redirect & HEREDOC) == HEREDOC)
-		cmd->hdocs_end = ft_add_io_file(cmd->hdocs_end, table[index], len);
+		cmd->hdocs_end = ft_many_redirect(cmd->hdocs_end, table[index], len);
 	else if ((redirect & OUTPUT) == OUTPUT || (redirect & APPEND) == APPEND)
-		cmd->to_file = ft_add_io_file(cmd->to_file, table[index], len);
+		cmd->to_file = ft_many_redirect(cmd->to_file, table[index], len);
 	return (0);
 }
 
@@ -100,10 +125,7 @@ int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 				len ++;
 			cmd->redirect |= redirect;
 			if (ft_add_redirection(cmd_table, cmd, count, len))
-			{
-				printf("%s `%c'\n", DIRECTION_ERR, cmd_table[count][0]);
-				return (1);
-			}
+				return (free(cmd_table), 1);
 			ft_arrange_table(cmd_table, count, len);
 			count --;
 		}

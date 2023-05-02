@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:19:02 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/02 19:08:37 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 # include <errno.h>
 # include <string.h>
 # include <unistd.h>
@@ -39,8 +40,8 @@ typedef struct s_cmds
 	char			**args;
 	char			**full_cmd;
 	char			*from_file;
-	char			*hdocs_end;
-	char			*to_file;
+	char			**hdocs_end;
+	char			**to_file;
 	int				redirect;
 	struct s_cmds	*next;
 }				t_cmds;

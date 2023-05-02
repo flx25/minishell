@@ -6,7 +6,7 @@
 /*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:51:42 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:16:13 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:20:06 by melkholy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,10 @@ t_cmds	*ft_parser(char **cmd_table)
 	if (!cmd)
 		return (NULL);
 	if (!cmd_table || ft_check_redirect(cmd, cmd_table))
-	{
-		ft_free_dstr(cmd_table);
-		free(cmd);
-		return (NULL);
-	}
+		return (free(cmd), NULL);
 	count = 0;
-	cmd->cmd = ft_strdup(cmd_table[count]);
+	if (cmd_table[count])
+		cmd->cmd = ft_strdup(cmd_table[count]);
 	cmd->args = (char **)ft_calloc(1, sizeof(char *));
 	if (!cmd->args)
 		return (NULL);
