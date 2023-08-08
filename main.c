@@ -6,17 +6,14 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:22:32 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/08/08 12:23:50 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-//using an unused variable will input Command:/Users/fvon-nag/goinfre/.brew/bin/
-// most likely an null edge case for ft_tokennize could fix this
-// still segfautling for $variables
-// most likely due to the placement of buildin execution
+// pipeing and redirection for buildins does not work yet
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
