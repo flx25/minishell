@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 19:58:12 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/08/09 10:26:53 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 		return ;
 	cmd = ft_text_analysis(&in_put[count], *env_list);
 	free(in_put);
-	if (!cmd)
+	if (!cmd || !ft_strlen(cmd->cmd))
 		return ;
 	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
