@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/09 10:04:08 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/09 10:10:51 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 // pipeing and redirection for buildins does not work yet
 // need to implement exit status
+//using an unused variable will input Command:/Users/fvon-nag/goinfre/.brew/bin/
+// most likely an null edge case for ft_tokennize could fix this
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
