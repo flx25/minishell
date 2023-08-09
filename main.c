@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/08 12:23:50 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/09 10:04:08 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 // pipeing and redirection for buildins does not work yet
+// need to implement exit status
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;
