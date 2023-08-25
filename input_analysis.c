@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/09 10:33:40 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/25 12:54:13 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,19 +126,26 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	char	**full_cmd;
 	int		count;
 
-	count = 0;
-	if (!cmd->cmd)
-		return ;
-	full_cmd = (char **)ft_calloc(1, sizeof(char *));
-	full_cmd[count] = ft_strdup(cmd->cmd);
-	full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);
-	while (cmd->args && cmd->args[count])
+	while (cmd)
 	{
-		full_cmd[count + 1] = ft_strdup(cmd->args[count]);
-		count ++;
+		count = 0;
+		if (!cmd->cmd)
+			return ;
+		full_cmd = (char **)ft_calloc(1, sizeof(char *));
+		full_cmd[count] = ft_strdup(cmd->cmd);
 		full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);
+		while (cmd->args && cmd->args[count])
+		{
+			full_cmd[count + 1] = ft_strdup(cmd->args[count]);
+			count ++;
+			full_cmd = ft_double_realloc(full_cmd, count + 1, count + 2);
+		}
+		cmd->full_cmd = full_cmd;
+		if (cmd->next)
+			cmd = cmd->next;
+		else
+			return ;
 	}
-	cmd->full_cmd = full_cmd;
 }
 
 /* Used to check the input and pass it to the parsing and cutting
