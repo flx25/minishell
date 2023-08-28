@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/25 12:55:27 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/28 09:25:51 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 // pipeing and redirection for buildins does not work yet
 // need to implement exit status
-// wrong redirection operators break shell (edgecase)
 
 int	ft_closing_qoutes(char *in_put)
 {
