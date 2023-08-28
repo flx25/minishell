@@ -43,6 +43,13 @@ typedef struct s_cmds
 	char			**hdocs_end;
 	char			**to_file;
 	int				redirect;
+	int				amount_of_cmds;
+	int				pipe1[2];
+	int				pipe2[2];
+	int				infile;
+	int				outfile;
+	int				pipe_shift;
+	int				exit_status;
 	struct s_cmds	*next;
 }				t_cmds;
 
