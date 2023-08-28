@@ -124,7 +124,7 @@ int	ft_is_builtin(t_cmds *cmd)
 	return (0);
 }
 
-void	execute_cmd(t_cmds *cmd, t_env *env_list)
+void	execute_cmd(t_cmds *cmd, t_env **env_list)
 {
 	char	**env_array;
 	//use proper envp
@@ -135,7 +135,7 @@ void	execute_cmd(t_cmds *cmd, t_env *env_list)
 		ft_putendl_fd(": command not found", STDERR_FILENO);
 	}
 	//needs to be freed, fucntion located in execution.c
-	env_array = ft_create_env_array(env_list);
+	env_array = ft_create_env_array(*env_list);
 	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
 	perror(cmd->full_cmd[0]);
 }
@@ -160,28 +160,42 @@ int	pipe_forker(t_cmds *cmd, t_env *env_list)
 	if (WIFSIGNALED(exit_status))
 		return (128 + WTERMSIG(exit_status));
 	return (WEXITSTATUS(exit_status));
-	//is supposed to fork based on what
-	//command is supposed to be executed.
-	//store the fork return value as exit_status,
-	//and return it in case of an error (?)
 }
 
 //uses a way different logic, needs some proper new approach
 //or a whole new builtin approach
 //NEEDS WORK
-int	check_or_exec_builtin(t_cmds *cmd, t_env *env_list)
+int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
 {
+	int	og_input;
+	int	og_output;
+
 	if (!ft_is_builtin(cmd))
 		return (0);
-	else
-		ft_execute_buildin(cmd, env_list);
-	//checks builtin, creates an exit status
-	//and gives back to regular pipe execution in case it is not a builtin
+	og_input = -1;
+	og_output = -1;
+	pipe_redirection(cmd, og_input, og_output);
+	cmd->exit_status = ft_execute_buildin(cmd, **env_list);
+	if (og_input == -1)
+		dup2_and_close(og_input, STDIN_FILENO);
+	if (og_output == -1)
+		dup2_and_close(og_output, STDOUT_FILENO);
+	return (1);
+}
 
+void	close_by_signal(t_cmds *cmd)
+{
+	if (cmd->exit_status > 128)
+	{
+		if (cmd->pipe_shift == 0)
+			close(cmd->pipe2[1]);
+		else
+			close(cmd->pipe(1));
+	}
 }
 
 //work on this so it takes own command linked list
-void	pipe_execution(t_cmds *cmd, t_env *env_list)
+void	pipe_execution(t_cmds *cmd, t_env **env_list)
 {
 	int			exit_status;
 	t_cmds		*current_command;
@@ -189,7 +203,6 @@ void	pipe_execution(t_cmds *cmd, t_env *env_list)
 	current_command = cmd;
 	exit_status = 0;
 	cmd->pipe_shift = 1;
-	// cmd->cmd = "part to be assigned"; <- this comes from parser
 	infile_fd(cmd, cmd->infile);
 	while (current_command && exit_status < 128)
 	{
@@ -197,18 +210,11 @@ void	pipe_execution(t_cmds *cmd, t_env *env_list)
 			pipe_setup(cmd);
 		else
 			outfile_fd(cmd, cmd->outfile);
-			//work on this part,
-			//might be able to replace it by
-			//"isbuiltin", "execute_builtin"
-			//and saving the exit code in either
-		//if (!check_or_execute_builtin(data, &exec_data,
-		//							  current_command->content))
-							//create
-		exit_status = pipe_forker(cmd, env_list);
+		if (!check_or_exec_builtin(cmd, **env_list))
+			exit_status = pipe_forker(cmd, *env_list);
 		pipe_switcheroo(cmd);
 		current_command = cmd->next;
 		cmd->exit_status = exit_status;
 	}
-		//create
-	//close_pipes_signal(exec_data, exit_status);
+	close_pipes(cmd);
 }

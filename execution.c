@@ -28,20 +28,22 @@ int	ft_cmd_size(t_cmds *cmd)
 	return (count);
 }
 
-void	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
+//think about changing function to int and return the value
+//so it can be stored as an exit value
+int	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
 {
 	if (!ft_strcmp(cmd->cmd, "export"))
-		ft_export(cmd->args, env_list);
+		return (ft_export(cmd->args, env_list));
 	else if (!ft_strcmp(cmd->cmd, "env"))
-		ft_env(*env_list);
+		return (ft_env(*env_list));
 	else if (!ft_strcmp(cmd->cmd, "cd"))
-		ft_cd(cmd->args, *env_list);
+		return (ft_cd(cmd->args, *env_list));
 	else if (!ft_strcmp(cmd->cmd, "pwd"))
-		ft_pwd();
+		return (ft_pwd());
 	else if (!ft_strcmp(cmd->cmd, "unset"))
-		ft_unset(cmd->args, env_list);
+		return (ft_unset(cmd->args, env_list));
 	else if (!ft_strcmp(cmd->cmd, "echo"))
-		ft_echo(cmd->args);
+		return (ft_echo(cmd->args));
 }
 
 char	**ft_create_env_array(t_env	*env_list)

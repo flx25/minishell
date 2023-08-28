@@ -99,7 +99,8 @@ int		ft_pwd(void);
 int		ft_unset(char **args, t_env **envp);
 int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list);
-void	ft_execute_buildin(t_cmds *cmd, t_env **env_list);
+int		ft_execute_buildin(t_cmds *cmd, t_env **env_list);
+char	**ft_create_env_array(t_env	*env_list);
 
 /* input_analysis.c */
 void	ft_parse_input(char *in_put, t_env **env_list);
