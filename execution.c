@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 20:20:50 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/08/28 15:30:44 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
 		return (ft_unset(cmd->args, env_list));
 	else if (!ft_strcmp(cmd->cmd, "echo"))
 		return (ft_echo(cmd->args));
+	//check whether 1 or 0 is proper success return value
+	return (0);
 }
 
 char	**ft_create_env_array(t_env	*env_list)
@@ -177,26 +179,27 @@ void	ft_execute_cmd(t_cmds *cmd, char **env_array)
 
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 {
-	char	**env_array;
-	int		pid;
+	//char	**env_array;
+	//int		pid;
 
-	if (ft_cmd_size(cmd) > 1)
-		return ;
-	if (!ft_isnonsyscommand(cmd->cmd))
-	{
-		env_array = ft_create_env_array(*env_list);
-		pid = fork();
-		if (pid == 0)
-			ft_execute_cmd(cmd, env_array);
-		wait(NULL);
-		if ((cmd->redirect & HEREDOC))
-			unlink("minhell_tmp.txt");
-		ft_free_cmdlist(&cmd);
-		ft_free_dstr(env_array);
-	}
-	else
-	{
-		ft_execute_buildin(cmd, env_list); //here causes segfault with envs
-		ft_free_cmdlist(&cmd);
-	}
+	//if (ft_cmd_size(cmd) > 1)
+	//	return ;
+	pipe_execution(cmd, env_list);
+	//if (!ft_isnonsyscommand(cmd->cmd))
+	//{
+	//	env_array = ft_create_env_array(*env_list);
+	//	pid = fork();
+	//	if (pid == 0)
+	//		ft_execute_cmd(cmd, env_array);
+	//	wait(NULL);
+	//	if ((cmd->redirect & HEREDOC))
+	//		unlink("minhell_tmp.txt");
+	//	ft_free_cmdlist(&cmd);
+	//	ft_free_dstr(env_array);
+	//}
+	//else
+	//{
+	//	ft_execute_buildin(cmd, env_list); //here causes segfault with envs
+	//	ft_free_cmdlist(&cmd);
+	//}
 }

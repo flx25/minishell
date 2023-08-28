@@ -27,6 +27,7 @@ SOURCES = main.c \
 			buildins.c \
 			buildins_2.c \
 			execution.c \
+			messing_around.c \
 
 
 NAME = minishell

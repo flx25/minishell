@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/08/28 13:34:33 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/28 15:35:22 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,11 +129,11 @@ void	execute_cmd(t_cmds *cmd, t_env **env_list)
 	char	**env_array;
 	//use proper envp
 	//if command path is invalid is the condition needed, UPDATE
-	if (!)
-	{
-		ft_putstr_fd(cmd->full_cmd[0], STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
-	}
+	//if (!)
+	//{
+	//	ft_putstr_fd(cmd->full_cmd[0], STDERR_FILENO);
+	//	ft_putendl_fd(": command not found", STDERR_FILENO);
+	//}
 	//needs to be freed, fucntion located in execution.c
 	env_array = ft_create_env_array(*env_list);
 	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
@@ -141,7 +141,7 @@ void	execute_cmd(t_cmds *cmd, t_env **env_list)
 }
 
 //NEEDS WORK
-int	pipe_forker(t_cmds *cmd, t_env *env_list)
+int	pipe_forker(t_cmds *cmd, t_env **env_list)
 {
 	int	pid;
 	int	exit_status;
@@ -175,7 +175,7 @@ int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
 	og_input = -1;
 	og_output = -1;
 	pipe_redirection(cmd, og_input, og_output);
-	cmd->exit_status = ft_execute_buildin(cmd, **env_list);
+	cmd->exit_status = ft_execute_buildin(cmd, env_list);
 	if (og_input == -1)
 		dup2_and_close(og_input, STDIN_FILENO);
 	if (og_output == -1)
@@ -190,7 +190,7 @@ void	close_by_signal(t_cmds *cmd)
 		if (cmd->pipe_shift == 0)
 			close(cmd->pipe2[1]);
 		else
-			close(cmd->pipe(1));
+			close(cmd->pipe1[1]);
 	}
 }
 
@@ -210,8 +210,8 @@ void	pipe_execution(t_cmds *cmd, t_env **env_list)
 			pipe_setup(cmd);
 		else
 			outfile_fd(cmd, cmd->outfile);
-		if (!check_or_exec_builtin(cmd, **env_list))
-			exit_status = pipe_forker(cmd, *env_list);
+		if (!check_or_exec_builtin(cmd, env_list))
+			exit_status = pipe_forker(cmd, env_list);
 		pipe_switcheroo(cmd);
 		current_command = cmd->next;
 		cmd->exit_status = exit_status;

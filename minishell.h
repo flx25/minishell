@@ -71,6 +71,7 @@ typedef struct s_term
 
 t_term	g_term_attr;
 
+void	pipe_execution(t_cmds *cmd, t_env **env_list);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
 void	ft_convertsyscommands(t_cmds *cmd, t_env *envp);
