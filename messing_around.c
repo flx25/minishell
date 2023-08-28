@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   messing_around.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiabdura <kiabdura@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/08/23 17:46:55 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/08/28 13:34:33 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,14 +169,12 @@ int	pipe_forker(t_cmds *cmd, t_env *env_list)
 //uses a way different logic, needs some proper new approach
 //or a whole new builtin approach
 //NEEDS WORK
-int	check_or_exec_builtin(t_cmds *cmd)
+int	check_or_exec_builtin(t_cmds *cmd, t_env *env_list)
 {
 	if (!ft_is_builtin(cmd))
 		return (0);
 	else
-	{
-
-	}
+		ft_execute_buildin(cmd, env_list);
 	//checks builtin, creates an exit status
 	//and gives back to regular pipe execution in case it is not a builtin
 
@@ -186,10 +184,12 @@ int	check_or_exec_builtin(t_cmds *cmd)
 void	pipe_execution(t_cmds *cmd, t_env *env_list)
 {
 	int			exit_status;
+	t_cmds		*current_command;
 
+	current_command = cmd;
 	exit_status = 0;
 	cmd->pipe_shift = 1;
-	cmd->cmd = "part to be assigned";
+	// cmd->cmd = "part to be assigned"; <- this comes from parser
 	infile_fd(cmd, cmd->infile);
 	while (current_command && exit_status < 128)
 	{
