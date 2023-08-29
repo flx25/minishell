@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/08/28 15:35:22 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/08/29 09:19:50 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,10 +211,12 @@ void	pipe_execution(t_cmds *cmd, t_env **env_list)
 		else
 			outfile_fd(cmd, cmd->outfile);
 		if (!check_or_exec_builtin(cmd, env_list))
-			exit_status = pipe_forker(cmd, env_list);
+			exit_status = pipe_forker(cmd, env_list); // get an exit status of 134 here in debugger
 		pipe_switcheroo(cmd);
-		current_command = cmd->next;
+		current_command = current_command->next;
 		cmd->exit_status = exit_status;
+
 	}
 	close_pipes(cmd);
+	ft_free_cmdlist(&cmd);
 }
