@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/08/29 09:19:50 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/08/30 10:29:16 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,26 @@ void	dup2_and_close(int from, int to)
 }
 
 //properly redirects depending on pipe shift, which is updated constantly
-void	pipe_redirection(t_cmds *cmd, int og_input, int og_output)
+void	pipe_redirection(t_cmds *cmd, int *og_input, int *og_output)
 {
 	if (cmd->pipe_shift == 0)
 	{
 		if (cmd->pipe1[0] != STDIN_FILENO)
-			og_input = dup(STDIN_FILENO);
+			*og_input = dup(STDIN_FILENO);
 		dup2_and_close(cmd->pipe1[0], STDIN_FILENO);
 		if (cmd->pipe1[1] != STDOUT_FILENO)
-			og_output = dup(STDOUT_FILENO);
+			*og_output = dup(STDOUT_FILENO);
 		dup2_and_close(cmd->pipe1[1], STDOUT_FILENO);
 	}
 	else
 	{
 		if (cmd->pipe2[0] != STDIN_FILENO)
-			og_input = dup(STDIN_FILENO);
+			*og_input = dup(STDIN_FILENO);
 		dup2_and_close(cmd->pipe2[0], STDIN_FILENO);
 		if (cmd->pipe2[1] != STDOUT_FILENO)
-			og_output = dup(STDOUT_FILENO);
+			*og_output = dup(STDOUT_FILENO);
 		dup2_and_close(cmd->pipe2[1], STDOUT_FILENO);
 	}
-	close(og_input);
-	close(og_output);
 }
 
 void	pipe_dup(t_cmds *cmd)
@@ -127,6 +125,8 @@ int	ft_is_builtin(t_cmds *cmd)
 void	execute_cmd(t_cmds *cmd, t_env **env_list)
 {
 	char	**env_array;
+
+	env_array = ft_create_env_array(*env_list);
 	//use proper envp
 	//if command path is invalid is the condition needed, UPDATE
 	//if (!)
@@ -135,7 +135,6 @@ void	execute_cmd(t_cmds *cmd, t_env **env_list)
 	//	ft_putendl_fd(": command not found", STDERR_FILENO);
 	//}
 	//needs to be freed, fucntion located in execution.c
-	env_array = ft_create_env_array(*env_list);
 	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
 	perror(cmd->full_cmd[0]);
 }
@@ -152,11 +151,10 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 		//check arguments passed to pipe_redirection
 		pipe_dup(cmd);
 		execute_cmd(cmd, env_list);
-		exit(127);
+		//exit(127);
 	}
 	close_pipes(cmd);
 	waitpid(pid, &exit_status, 0);
-	//handle_parent_signals();
 	if (WIFSIGNALED(exit_status))
 		return (128 + WTERMSIG(exit_status));
 	return (WEXITSTATUS(exit_status));
@@ -174,11 +172,11 @@ int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
 		return (0);
 	og_input = -1;
 	og_output = -1;
-	pipe_redirection(cmd, og_input, og_output);
+	pipe_redirection(cmd, &og_input, &og_output);
 	cmd->exit_status = ft_execute_buildin(cmd, env_list);
-	if (og_input == -1)
+	if (og_input > -1)
 		dup2_and_close(og_input, STDIN_FILENO);
-	if (og_output == -1)
+	if (og_output > 1)
 		dup2_and_close(og_output, STDOUT_FILENO);
 	return (1);
 }
@@ -213,10 +211,12 @@ void	pipe_execution(t_cmds *cmd, t_env **env_list)
 		if (!check_or_exec_builtin(cmd, env_list))
 			exit_status = pipe_forker(cmd, env_list); // get an exit status of 134 here in debugger
 		pipe_switcheroo(cmd);
-		current_command = current_command->next;
 		cmd->exit_status = exit_status;
-
+		current_command = current_command->next;
 	}
-	close_pipes(cmd);
+	close_by_signal(cmd);
 	ft_free_cmdlist(&cmd);
 }
+
+//make sure input redirection is properly handled so readline is
+//not trashed with input
