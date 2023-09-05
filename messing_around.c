@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/08/30 10:29:16 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/05 14:15:49 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,18 +61,18 @@ void	pipe_redirection(t_cmds *cmd, int *og_input, int *og_output)
 		if (cmd->pipe1[0] != STDIN_FILENO)
 			*og_input = dup(STDIN_FILENO);
 		dup2_and_close(cmd->pipe1[0], STDIN_FILENO);
-		if (cmd->pipe1[1] != STDOUT_FILENO)
+		if (cmd->pipe2[1] != STDOUT_FILENO)
 			*og_output = dup(STDOUT_FILENO);
-		dup2_and_close(cmd->pipe1[1], STDOUT_FILENO);
+		dup2_and_close(cmd->pipe2[1], STDOUT_FILENO);
 	}
 	else
 	{
 		if (cmd->pipe2[0] != STDIN_FILENO)
 			*og_input = dup(STDIN_FILENO);
 		dup2_and_close(cmd->pipe2[0], STDIN_FILENO);
-		if (cmd->pipe2[1] != STDOUT_FILENO)
+		if (cmd->pipe1[1] != STDOUT_FILENO)
 			*og_output = dup(STDOUT_FILENO);
-		dup2_and_close(cmd->pipe2[1], STDOUT_FILENO);
+		dup2_and_close(cmd->pipe1[1], STDOUT_FILENO);
 	}
 }
 
@@ -145,16 +145,20 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 	int	pid;
 	int	exit_status;
 
+	printf("not yet\n");
 	pid = fork();
+	//handle_child_signals();
 	if (pid == 0)
 	{
+		printf("we in here\n");
 		//check arguments passed to pipe_redirection
 		pipe_dup(cmd);
 		execute_cmd(cmd, env_list);
-		//exit(127);
+		exit(127);
 	}
 	close_pipes(cmd);
 	waitpid(pid, &exit_status, 0);
+	//handle_parent_signals();
 	if (WIFSIGNALED(exit_status))
 		return (128 + WTERMSIG(exit_status));
 	return (WEXITSTATUS(exit_status));
@@ -174,6 +178,7 @@ int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
 	og_output = -1;
 	pipe_redirection(cmd, &og_input, &og_output);
 	cmd->exit_status = ft_execute_buildin(cmd, env_list);
+	printf("%i\n", cmd->exit_status);
 	if (og_input > -1)
 		dup2_and_close(og_input, STDIN_FILENO);
 	if (og_output > 1)
