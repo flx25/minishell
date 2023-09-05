@@ -184,7 +184,7 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 
 	if (ft_cmd_size(cmd) > 1)
 		pipe_execution(cmd, env_list);
-	else if (!ft_isnonsyscommand(cmd->cmd))
+	if (!ft_isnonsyscommand(cmd->cmd))
 	{
 		env_array = ft_create_env_array(*env_list);
 		pid = fork();
