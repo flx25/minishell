@@ -217,22 +217,22 @@ void	pipe_execution(t_cmds *cmd, t_env **env_list)
 		if (current_command->next != NULL)
 		{
 			pipe_setup(cmd);
-			printf("SETUP\n");
+			printf("SETUP %s\n", current_command->cmd);
 		}
 		else
 		{
 			outfile_fd(cmd, cmd->outfile);
 			printf("OUTFILE\n");
 		}
-		if (!check_or_exec_builtin(cmd, env_list))
+		if (!check_or_exec_builtin(current_command, env_list))
 		{
-			exit_status = pipe_forker(cmd, env_list);
+			exit_status = pipe_forker(current_command, env_list);
 			printf("FORK\n");
 		}
 		pipe_switcheroo(cmd);
 		printf("SWITCH\n");
-		cmd->exit_status = exit_status;
 		current_command = current_command->next;
+		cmd->exit_status = exit_status;
 	}
 	//close_pipes(cmd);
 	close_by_signal(cmd);
