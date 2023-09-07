@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/05 14:15:49 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/07 12:20:31 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@
 //simply initializes both pipes
 void	pipe_setup(t_cmds *cmd)
 {
-	pipe(cmd->pipe1);
-	pipe(cmd->pipe2);
+	if (cmd->pipe_shift == 0)
+		pipe(cmd->pipe2);
+	else
+		pipe(cmd->pipe1);
 }
 
 //switches input/output of the pipes for further communication
@@ -49,8 +51,11 @@ void	outfile_fd(t_cmds *cmd, int fd)
 //ease of use function
 void	dup2_and_close(int from, int to)
 {
-	dup2(from, to);
-	close(from);
+	if (from > 2)
+	{
+		dup2(from, to);
+		close(from);
+	}
 }
 
 //properly redirects depending on pipe shift, which is updated constantly
@@ -145,12 +150,11 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 	int	pid;
 	int	exit_status;
 
-	printf("not yet\n");
 	pid = fork();
 	//handle_child_signals();
 	if (pid == 0)
 	{
-		printf("we in here\n");
+		printf("SYSCOMMAND\n");
 		//check arguments passed to pipe_redirection
 		pipe_dup(cmd);
 		execute_cmd(cmd, env_list);
@@ -164,75 +168,37 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 	return (WEXITSTATUS(exit_status));
 }
 
-static void	*get_builtin_function(char *command)
-{
-	if (!ft_strncmp(command, "echo", 5))
-		return (&ft_echo);
-	else if (!ft_strncmp(command, "cd", 3))
-		return (&ft_cd);
-	else if (!ft_strncmp(command, "pwd", 4))
-		return (&ft_pwd);
-	else if (!ft_strncmp(command, "export", 7))
-		return (&ft_export);
-	else if (!ft_strncmp(command, "unset", 6))
-		return (&ft_unset);
-	else if (!ft_strncmp(command, "env", 4))
-		return (&ft_env);
-	//else if (!ft_strncmp(command, "exit", 5))
-	//	return (&ft_exit);
-	return (NULL);
-}
-
-int	check_or_execute_builtin(t_cmds *cmd, char **cmd_arr)
-{
-	int	(*builtin)(t_cmds *, char **);
-	int	original_input;
-	int	original_output;
-
-	builtin = get_builtin_function(cmd_arr[0]);
-	if (!builtin)
-		return (0);
-	original_input = -1;
-	original_output = -1;
-	pipe_redirection(cmd, &original_input, &original_output);
-	cmd->exit_status = builtin(cmd, cmd_arr);
-	if (original_input > -1)
-		dup2_and_close(original_input, STDIN_FILENO);
-	if (original_output > 1)
-		dup2_and_close(original_output, STDOUT_FILENO);
-	return (1);
-}
-
 //uses a way different logic, needs some proper new approach
 //or a whole new builtin approach
 //NEEDS WORK
-//int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
-//{
-//	int	og_input;
-//	int	og_output;
-//
-//	if (!ft_is_builtin(cmd))
-//		return (0);
-//	og_input = -1;
-//	og_output = -1;
-//	pipe_redirection(cmd, &og_input, &og_output);
-//	cmd->exit_status = ft_execute_buildin(cmd, env_list);
-//	printf("%i\n", cmd->exit_status);
-//	if (og_input > -1)
-//		dup2_and_close(og_input, STDIN_FILENO);
-//	if (og_output > 1)
-//		dup2_and_close(og_output, STDOUT_FILENO);
-//	return (1);
-//}
+int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
+{
+	int	og_input;
+	int	og_output;
+
+	if (!ft_is_builtin(cmd))
+		return (0);
+	printf("BUILTIN\n");
+	og_input = -1;
+	og_output = -1;
+	pipe_redirection(cmd, &og_input, &og_output);
+	cmd->exit_status = ft_execute_buildin(cmd, env_list);
+	printf("%i\n", cmd->exit_status);
+	if (og_input > -1)
+		dup2_and_close(og_input, STDIN_FILENO);
+	if (og_output > 1)
+		dup2_and_close(og_output, STDOUT_FILENO);
+	return (1);
+}
 
 void	close_by_signal(t_cmds *cmd)
 {
 	if (cmd->exit_status > 128)
 	{
 		if (cmd->pipe_shift == 0)
-			close(cmd->pipe2[1]);
+			close(cmd->pipe2[0]);
 		else
-			close(cmd->pipe1[1]);
+			close(cmd->pipe1[0]);
 	}
 }
 
@@ -249,18 +215,32 @@ void	pipe_execution(t_cmds *cmd, t_env **env_list)
 	while (current_command && exit_status < 128)
 	{
 		if (current_command->next != NULL)
+		{
 			pipe_setup(cmd);
+			printf("SETUP\n");
+		}
 		else
+		{
 			outfile_fd(cmd, cmd->outfile);
-		if (!check_or_execute_builtin(cmd, cmd->full_cmd))
-			exit_status = pipe_forker(cmd, env_list); // get an exit status of 134 here in debugger
+			printf("OUTFILE\n");
+		}
+		if (!check_or_exec_builtin(cmd, env_list))
+		{
+			exit_status = pipe_forker(cmd, env_list);
+			printf("FORK\n");
+		}
 		pipe_switcheroo(cmd);
+		printf("SWITCH\n");
 		cmd->exit_status = exit_status;
 		current_command = current_command->next;
 	}
+	//close_pipes(cmd);
 	close_by_signal(cmd);
+	printf("FINISHED\n");
 	//ft_free_cmdlist(&cmd);
 }
+
+
 
 //make sure input redirection is properly handled so readline is
 //not trashed with input
