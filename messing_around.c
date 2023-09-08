@@ -196,6 +196,7 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 	}
 	close_pipes(cmd);
 	waitpid(pid, &exit_status, 0);
+	//make sure to properly waitpid so no sudden stop occurs
 	//handle_parent_signals();
 	if (WIFSIGNALED(exit_status))
 		return (128 + WTERMSIG(exit_status));
