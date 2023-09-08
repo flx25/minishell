@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/07 12:20:31 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/08 10:49:00 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,44 @@ void	execute_cmd(t_cmds *cmd, t_env **env_list)
 	//	ft_putendl_fd(": command not found", STDERR_FILENO);
 	//}
 	//needs to be freed, fucntion located in execution.c
-	execve(cmd->full_cmd[0], cmd->full_cmd, env_array);
+	printf("EXEC_CHECK");
+	execve(cmd->cmd, cmd->full_cmd, env_array);
 	perror(cmd->full_cmd[0]);
 }
+
+//static void	sigint_handler(int signal)
+//{
+//	if (signal == SIGINT)
+//	{
+//		//rl_replace_line("", 0);
+//		rl_on_new_line();
+//		ft_putchar_fd('\n', STDOUT_FILENO);
+//		rl_redisplay();
+//	}
+//}
+//
+//// Register SIGINT handler and ignore SIGQUIT for parent process
+//void	handle_parent_signals(void)
+//{
+//	signal(SIGINT, sigint_handler);
+//	signal(SIGQUIT, SIG_IGN);
+//}
+//
+//// SIGINT and SIGQUIT handler for child process
+//static void	child_signal_handler(int signal)
+//{
+//	if (signal == SIGQUIT)
+//		ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
+//	else if (signal == SIGINT)
+//		ft_putchar_fd('\n', STDERR_FILENO);
+//}
+//
+//// Register SIGINT and SIGQUIT handler for child process
+//void	handle_child_signals(void)
+//{
+//	signal(SIGINT, child_signal_handler);
+//	signal(SIGQUIT, child_signal_handler);
+//}
 
 //NEEDS WORK
 int	pipe_forker(t_cmds *cmd, t_env **env_list)
@@ -154,9 +189,8 @@ int	pipe_forker(t_cmds *cmd, t_env **env_list)
 	//handle_child_signals();
 	if (pid == 0)
 	{
-		printf("SYSCOMMAND\n");
-		//check arguments passed to pipe_redirection
 		pipe_dup(cmd);
+		printf("SYSCOMMAND = %s\n", cmd->cmd);
 		execute_cmd(cmd, env_list);
 		exit(127);
 	}
@@ -177,12 +211,14 @@ int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
 	int	og_output;
 
 	if (!ft_is_builtin(cmd))
+	{
 		return (0);
-	printf("BUILTIN\n");
+	}
 	og_input = -1;
 	og_output = -1;
 	pipe_redirection(cmd, &og_input, &og_output);
 	cmd->exit_status = ft_execute_buildin(cmd, env_list);
+	printf("BUILTIN = %s\n", cmd->cmd);
 	printf("%i\n", cmd->exit_status);
 	if (og_input > -1)
 		dup2_and_close(og_input, STDIN_FILENO);
