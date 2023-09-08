@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/25 12:54:13 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/08 12:14:43 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,45 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	}
 }
 
+// not sure if it frees everything, only uses normal spaces
+void	ft_removespaces(char **str)
+{
+	int		count;
+	int		count2;
+	char	*tmp;
+
+	count = 0;
+	while (str[count])
+	{
+		count2 = 0;
+		while (!isascii(str[count][count2]) || str[count][count2] == ' '
+			|| str[count][count2] == '\t' || str[count][count2] == '\v')
+			count2 ++;
+		if (count2)
+		{
+			tmp = ft_strdup(&str[count][count2]);
+			free(str[count]);
+			str[count] = tmp;
+		}
+		count ++;
+	}
+}
+
+void	ft_removesurplusspaces(t_cmds *cmd)
+{
+	t_cmds	*tmp;
+
+	tmp = cmd;
+
+	while (tmp)
+	{
+		if (!ft_isascii(tmp->cmd[0]))
+			ft_removespaces(tmp->args);
+		tmp = tmp->next;
+	}
+
+}
+
 /* Used to check the input and pass it to the parsing and cutting
  functions to get back either a linked list with all the command original
  just one command in a node */
@@ -166,6 +205,7 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 		return ;
 	if (!strlen(cmd->cmd))
 		return (ft_free_cmdlist(&cmd));
+	ft_removesurplusspaces(cmd);
 	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
 	ft_cmd_analysis(cmd, env_list);
