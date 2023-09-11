@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/08 12:14:43 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 09:11:16 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ void	ft_removespaces(char **str)
 	while (str[count])
 	{
 		count2 = 0;
-		while (!isascii(str[count][count2]) || str[count][count2] == ' '
+		while (!ft_isascii(str[count][count2]) || str[count][count2] == ' '
 			|| str[count][count2] == '\t' || str[count][count2] == '\v')
 			count2 ++;
 		if (count2)
@@ -177,14 +177,12 @@ void	ft_removesurplusspaces(t_cmds *cmd)
 	t_cmds	*tmp;
 
 	tmp = cmd;
-
 	while (tmp)
 	{
 		if (!ft_isascii(tmp->cmd[0]))
 			ft_removespaces(tmp->args);
 		tmp = tmp->next;
 	}
-
 }
 
 /* Used to check the input and pass it to the parsing and cutting
