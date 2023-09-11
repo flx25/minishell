@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:26:20 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/20 16:25:12 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:27:31 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *str)
 	size_t	count;
 	size_t	len;
 
+	if (!str)
+		return (NULL);
 	len = ft_strlen(str);
 	dup = (char *)malloc((len + 1) * sizeof(char));
 	if (dup == NULL)

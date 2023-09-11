@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/08 12:14:43 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:55:32 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,28 +148,22 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	}
 }
 
-// not sure if it frees everything, only uses normal spaces
 void	ft_removespaces(char **str)
 {
-	int		count;
 	int		count2;
 	char	*tmp;
 
-	count = 0;
-	while (str[count])
+	count2 = 0;
+	while (!ft_isascii(str[0][count2]) || str[0][count2] == ' '
+		|| str[0][count2] == '\t' || str[0][count2] == '\v')
+		count2 ++;
+	if (count2)
 	{
-		count2 = 0;
-		while (!isascii(str[count][count2]) || str[count][count2] == ' '
-			|| str[count][count2] == '\t' || str[count][count2] == '\v')
-			count2 ++;
-		if (count2)
-		{
-			tmp = ft_strdup(&str[count][count2]);
-			free(str[count]);
-			str[count] = tmp;
-		}
-		count ++;
+		tmp = ft_strdup(&str[0][count2]);
+		free(str[0]);
+		str[0] = tmp;
 	}
+
 }
 
 void	ft_removesurplusspaces(t_cmds *cmd)
@@ -177,14 +171,13 @@ void	ft_removesurplusspaces(t_cmds *cmd)
 	t_cmds	*tmp;
 
 	tmp = cmd;
-
 	while (tmp)
 	{
-		if (!ft_isascii(tmp->cmd[0]))
-			ft_removespaces(tmp->args);
+		if (!ft_isascii(tmp->cmd[0]) || tmp->cmd[0] == ' '
+			|| tmp->cmd[0] == '\t' || tmp->cmd[0] == '\v')
+			ft_removespaces(&tmp->cmd);
 		tmp = tmp->next;
 	}
-
 }
 
 /* Used to check the input and pass it to the parsing and cutting
@@ -202,12 +195,17 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	cmd = ft_text_analysis(&in_put[count], *env_list);
 	free(in_put);
 	if (!cmd)
+	{
+		printf("minihell: syntax error near unexpected token `%s' \n", in_put);  //prototype
 		return ;
-	if (!strlen(cmd->cmd))
+	}
+
+	if (!cmd->cmd || !strlen(cmd->cmd))
 		return (ft_free_cmdlist(&cmd));
 	ft_removesurplusspaces(cmd);
 	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
+
 	ft_cmd_analysis(cmd, env_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/

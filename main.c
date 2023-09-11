@@ -6,14 +6,17 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/08/09 10:27:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 11:00:52 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-// pipeing and redirection for buildins does not work yet
+// not sure if completely working: 'syntax error near unexpected token '
+// "" still does not work as in bash
+// is a directory needs to be implemented instead of permission denied
+// needs command not found instead of no such file or directory
 // need to implement exit status
 
 int	ft_closing_qoutes(char *in_put)
