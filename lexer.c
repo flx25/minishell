@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:41:54 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/01 16:37:33 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:21:41 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ char	**ft_lexer(char *in_put, t_env *env_list)
 			count ++;
 		}
 		str = ft_tokenize(str, in_put, &count, env_list);
+		if (!str)
+			str = ft_strdup("");
 		cmd_table[++index] = ft_strdup(str);
 		cmd_table = ft_double_realloc(cmd_table, index + 1, index + 2);
 		free(str);
