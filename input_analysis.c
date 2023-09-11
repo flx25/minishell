@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 10:01:47 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:55:32 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,12 +195,17 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	cmd = ft_text_analysis(&in_put[count], *env_list);
 	free(in_put);
 	if (!cmd)
+	{
+		printf("minihell: syntax error near unexpected token `%s' \n", in_put);  //prototype
 		return ;
-	if (!strlen(cmd->cmd))
+	}
+
+	if (!cmd->cmd || !strlen(cmd->cmd))
 		return (ft_free_cmdlist(&cmd));
 	ft_removesurplusspaces(cmd);
 	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
+
 	ft_cmd_analysis(cmd, env_list);
 	/* The rest of the function is for demonstration purposes
 	  to make sure the lexer is working well*/

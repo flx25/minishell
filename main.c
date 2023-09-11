@@ -6,13 +6,15 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 10:28:06 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:56:44 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
+// not sure if completely working: 'syntax error near unexpected token '
+// "" still does not work as in bash
 // need to implement exit status
 
 int	ft_closing_qoutes(char *in_put)
