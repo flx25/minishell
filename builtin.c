@@ -6,7 +6,7 @@
 /*   By: kiabdura <kiabdura@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 04:28:10 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/11 04:28:10 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 05:48:20 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,6 @@
 #include "Libft/libft.h"
 
 // make sure to add proper EXIT_SUCESS/EXIT_FAILURE
-static void	*get_builtin_function(char *command)
-{
-	if (!ft_strncmp(command, "echo", 5))
-		return (&ft_echo);
-	else if (!ft_strncmp(command, "cd", 3))
-		return (&ft_cd);
-	else if (!ft_strncmp(command, "pwd", 4))
-		return (&ft_pwd);
-	else if (!ft_strncmp(command, "export", 7))
-		return (&ft_export);
-	else if (!ft_strncmp(command, "unset", 6))
-		return (&ft_unset);
-	else if (!ft_strncmp(command, "env", 4))
-		return (&ft_env);
-	else if (!ft_strncmp(command, "exit", 5))
-		return (&exit);
-	return (NULL);
-}
 
 static void	dup_pipe(t_exec *exec_data,
 						int *original_input, int *original_output)
@@ -56,20 +38,33 @@ static void	dup_pipe(t_exec *exec_data,
 	}
 }
 
-int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data)
+int	is_builtin(t_cmds *cmd)
 {
-	int	(*builtin)(t_cmds *, char **);
+	if (!ft_strncmp(cmd->cmd, "echo", 5)
+		||!ft_strncmp(cmd->cmd, "cd", 3)
+		||!ft_strncmp(cmd->cmd, "pwd", 4)
+		||!ft_strncmp(cmd->cmd, "export", 7)
+		||!ft_strncmp(cmd->cmd, "unset", 6)
+		||!ft_strncmp(cmd->cmd, "env", 4)
+		||!ft_strncmp(cmd->cmd, "exit", 5))
+		return (1);
+	return (0);
+}
+
+int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list)
+{
+	//int	(*builtin)(t_cmds *, char **);
 	int	original_input;
 	int	original_output;
 
 	// for this make sure to EXIT_SUCCESS in the according functions
-	builtin = get_builtin_function(cmd->cmd);
-	if (!builtin)
+	//builtin = get_builtin_function(cmd->cmd);
+	if (!is_builtin(cmd))
 		return (0);
 	original_input = -1;
 	original_output = -1;
 	dup_pipe(exec_data, &original_input, &original_output);
-	exec_data->exit_status = builtin(cmd, cmd->full_cmd);
+	exec_data->exit_status = ft_execute_buildin(cmd, &env_list);
 	if (original_input > -1)
 		dup2_and_close(original_input, STDIN_FILENO);
 	if (original_output > 1)

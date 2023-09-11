@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 05:18:25 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 05:43:23 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ typedef struct s_term
 t_term	g_term_attr;
 
 
-int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data);
+int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
 int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);
 void	dup2_and_close(int from, int to);
 void	executor(t_cmds *cmd, t_env *env_list);
