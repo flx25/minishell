@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:41:54 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 14:15:23 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:33:45 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	**ft_lexer(char *in_put, t_env *env_list)
 	count = -1;
 	index = -1;
 	cmd_table = (char **)ft_calloc(1, sizeof(char *));
-	if (!cmd_table || !in_put) //maybe call unexpected token here
+	if (!cmd_table || !in_put)
 		return (NULL);
 	while (in_put[++count])
 	{

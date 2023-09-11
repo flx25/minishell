@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 05:48:20 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:44:04 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ typedef struct s_term
 	int				status;
 }				t_term;
 
-t_term	g_term_attr;
-
+struct termios	save_attr;
 
 int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
 int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);

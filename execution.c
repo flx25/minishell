@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/06 12:36:58 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:47:47 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	ft_infile_fd(t_cmds *cmd)
 	if (access(cmd->from_file, F_OK | R_OK))
 	{
 		if (access(cmd->from_file, F_OK))
-			g_term_attr.status = 1;
+			// g_term_attr.status = 1; --> exit code
 		printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
 	}
 	else
@@ -110,7 +110,7 @@ void	ft_outfile_fd(char *to_file, int redirect)
 	else if (!access(to_file, F_OK))
 	{
 		printf("minihell: %s: %s\n", strerror(errno), to_file);
-		g_term_attr.status = 1;
+		//g_term_attr.status = 1; -> maybe need to replace with envp
 	}
 	else
 		outfile = open(to_file, O_RDWR | O_CREAT | flag, 0666);

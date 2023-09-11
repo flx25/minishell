@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 10:55:32 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:32:48 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	free(in_put);
 	if (!cmd)
 	{
-		printf("minihell: syntax error near unexpected token `%s' \n", in_put);  //prototype
+		printf("minihell: syntax error near unexpected token `%s' \n", in_put);
 		return ;
 	}
 
