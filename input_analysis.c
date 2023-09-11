@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 09:11:16 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 10:01:47 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,28 +148,22 @@ void	ft_create_fullcmd(t_cmds *cmd)
 	}
 }
 
-// not sure if it frees everything, only uses normal spaces
 void	ft_removespaces(char **str)
 {
-	int		count;
 	int		count2;
 	char	*tmp;
 
-	count = 0;
-	while (str[count])
+	count2 = 0;
+	while (!ft_isascii(str[0][count2]) || str[0][count2] == ' '
+		|| str[0][count2] == '\t' || str[0][count2] == '\v')
+		count2 ++;
+	if (count2)
 	{
-		count2 = 0;
-		while (!ft_isascii(str[count][count2]) || str[count][count2] == ' '
-			|| str[count][count2] == '\t' || str[count][count2] == '\v')
-			count2 ++;
-		if (count2)
-		{
-			tmp = ft_strdup(&str[count][count2]);
-			free(str[count]);
-			str[count] = tmp;
-		}
-		count ++;
+		tmp = ft_strdup(&str[0][count2]);
+		free(str[0]);
+		str[0] = tmp;
 	}
+
 }
 
 void	ft_removesurplusspaces(t_cmds *cmd)
@@ -179,8 +173,9 @@ void	ft_removesurplusspaces(t_cmds *cmd)
 	tmp = cmd;
 	while (tmp)
 	{
-		if (!ft_isascii(tmp->cmd[0]))
-			ft_removespaces(tmp->args);
+		if (!ft_isascii(tmp->cmd[0]) || tmp->cmd[0] == ' '
+			|| tmp->cmd[0] == '\t' || tmp->cmd[0] == '\v')
+			ft_removespaces(&tmp->cmd);
 		tmp = tmp->next;
 	}
 }
