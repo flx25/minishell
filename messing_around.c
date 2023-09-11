@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/08 10:49:00 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 02:07:00 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,268 +14,64 @@
 #include "Libft/libft.h"
 
 //simply initializes both pipes
-void	pipe_setup(t_cmds *cmd)
+#include "minishell.h"
+#include "Libft/libft.h"
+
+static void	initiate_pipe(t_exec *exec_data)
 {
-	if (cmd->pipe_shift == 0)
-		pipe(cmd->pipe2);
+	if (exec_data->pipe_shift == 0)
+		pipe(exec_data->pipe2);
 	else
-		pipe(cmd->pipe1);
+		pipe(exec_data->pipe1);
 }
 
-//switches input/output of the pipes for further communication
-void	pipe_switcheroo(t_cmds *cmd)
+static void	rotator(t_exec *exec_data)
 {
-	if (cmd->pipe_shift == 0)
-		cmd->pipe_shift = 1;
+	if (exec_data->pipe_shift == 0)
+		exec_data->pipe_shift = 1;
 	else
-		cmd->pipe_shift = 0;
+		exec_data->pipe_shift = 0;
 }
 
-//called at the beginning to get the pipeline started with the infile as input
-
-void	infile_fd(t_cmds *cmd, int fd)
+static void	set_in_fd(t_exec *exec_data, int fd)
 {
-	cmd->pipe2[0] = fd;
-	cmd->pipe1[0] = -1;
+	exec_data->pipe2[READ_END] = fd;
+	exec_data->pipe1[READ_END] = -1;
 }
 
-//called in the end to stop the pipeline by writing output to the outfile
-void	outfile_fd(t_cmds *cmd, int fd)
+static void	set_out_fd(t_exec *exec_data, int fd)
 {
-	if (cmd->pipe_shift == 0)
-		cmd->pipe2[1] = fd;
+	if (exec_data->pipe_shift == 0)
+		exec_data->pipe2[WRITE_END] = fd;
 	else
-		cmd->pipe1[1] = fd;
+		exec_data->pipe1[WRITE_END] = fd;
 }
 
-//ease of use function
-void	dup2_and_close(int from, int to)
+void	executor(t_cmds *cmd, t_env *env_list)
 {
-	if (from > 2)
-	{
-		dup2(from, to);
-		close(from);
-	}
-}
+	t_exec	exec_data;
+	t_cmds	*current_command;
+	int		exit_status;
 
-//properly redirects depending on pipe shift, which is updated constantly
-void	pipe_redirection(t_cmds *cmd, int *og_input, int *og_output)
-{
-	if (cmd->pipe_shift == 0)
-	{
-		if (cmd->pipe1[0] != STDIN_FILENO)
-			*og_input = dup(STDIN_FILENO);
-		dup2_and_close(cmd->pipe1[0], STDIN_FILENO);
-		if (cmd->pipe2[1] != STDOUT_FILENO)
-			*og_output = dup(STDOUT_FILENO);
-		dup2_and_close(cmd->pipe2[1], STDOUT_FILENO);
-	}
-	else
-	{
-		if (cmd->pipe2[0] != STDIN_FILENO)
-			*og_input = dup(STDIN_FILENO);
-		dup2_and_close(cmd->pipe2[0], STDIN_FILENO);
-		if (cmd->pipe1[1] != STDOUT_FILENO)
-			*og_output = dup(STDOUT_FILENO);
-		dup2_and_close(cmd->pipe1[1], STDOUT_FILENO);
-	}
-}
-
-void	pipe_dup(t_cmds *cmd)
-{
-	if (cmd->pipe_shift == 0)
-	{
-		dup2_and_close(cmd->pipe1[0], STDIN_FILENO);
-		dup2_and_close(cmd->pipe2[1], STDOUT_FILENO);
-		if (cmd->pipe2[0] > 2)
-			close(cmd->pipe2[0]);
-	}
-	else
-	{
-		dup2_and_close(cmd->pipe2[0], STDIN_FILENO);
-		dup2_and_close(cmd->pipe1[1], STDOUT_FILENO);
-		if (cmd->pipe1[0] > 2)
-			close(cmd->pipe1[0]);
-	}
-}
-
-//modify this
-void	close_pipes(t_cmds *cmd)
-{
-	if (cmd->pipe_shift == 0)
-	{
-		if (cmd->pipe1[0] != STDIN_FILENO)
-			close(cmd->pipe1[0]);
-		if (cmd->pipe2[1] != STDOUT_FILENO)
-			close(cmd->pipe2[1]);
-	}
-	else
-	{
-		if (cmd->pipe2[0] != STDIN_FILENO)
-			close(cmd->pipe2[0]);
-		if (cmd->pipe1[1] != STDOUT_FILENO)
-			close(cmd->pipe1[1]);
-	}
-}
-
-int	ft_is_builtin(t_cmds *cmd)
-{
-	if (!ft_strcmp(cmd->cmd, "export") || !ft_strcmp(cmd->cmd, "unset")
-		||!ft_strcmp(cmd->cmd, "env") || !ft_strcmp(cmd->cmd, "exit")
-		|| !ft_strcmp(cmd->cmd, "cd"))
-		return (1);
-	return (0);
-}
-
-void	execute_cmd(t_cmds *cmd, t_env **env_list)
-{
-	char	**env_array;
-
-	env_array = ft_create_env_array(*env_list);
-	//use proper envp
-	//if command path is invalid is the condition needed, UPDATE
-	//if (!)
-	//{
-	//	ft_putstr_fd(cmd->full_cmd[0], STDERR_FILENO);
-	//	ft_putendl_fd(": command not found", STDERR_FILENO);
-	//}
-	//needs to be freed, fucntion located in execution.c
-	printf("EXEC_CHECK");
-	execve(cmd->cmd, cmd->full_cmd, env_array);
-	perror(cmd->full_cmd[0]);
-}
-
-//static void	sigint_handler(int signal)
-//{
-//	if (signal == SIGINT)
-//	{
-//		//rl_replace_line("", 0);
-//		rl_on_new_line();
-//		ft_putchar_fd('\n', STDOUT_FILENO);
-//		rl_redisplay();
-//	}
-//}
-//
-//// Register SIGINT handler and ignore SIGQUIT for parent process
-//void	handle_parent_signals(void)
-//{
-//	signal(SIGINT, sigint_handler);
-//	signal(SIGQUIT, SIG_IGN);
-//}
-//
-//// SIGINT and SIGQUIT handler for child process
-//static void	child_signal_handler(int signal)
-//{
-//	if (signal == SIGQUIT)
-//		ft_putstr_fd("Quit: 3\n", STDERR_FILENO);
-//	else if (signal == SIGINT)
-//		ft_putchar_fd('\n', STDERR_FILENO);
-//}
-//
-//// Register SIGINT and SIGQUIT handler for child process
-//void	handle_child_signals(void)
-//{
-//	signal(SIGINT, child_signal_handler);
-//	signal(SIGQUIT, child_signal_handler);
-//}
-
-//NEEDS WORK
-int	pipe_forker(t_cmds *cmd, t_env **env_list)
-{
-	int	pid;
-	int	exit_status;
-
-	pid = fork();
-	//handle_child_signals();
-	if (pid == 0)
-	{
-		pipe_dup(cmd);
-		printf("SYSCOMMAND = %s\n", cmd->cmd);
-		execute_cmd(cmd, env_list);
-		exit(127);
-	}
-	close_pipes(cmd);
-	waitpid(pid, &exit_status, 0);
-	//make sure to properly waitpid so no sudden stop occurs
-	//handle_parent_signals();
-	if (WIFSIGNALED(exit_status))
-		return (128 + WTERMSIG(exit_status));
-	return (WEXITSTATUS(exit_status));
-}
-
-//uses a way different logic, needs some proper new approach
-//or a whole new builtin approach
-//NEEDS WORK
-int	check_or_exec_builtin(t_cmds *cmd, t_env **env_list)
-{
-	int	og_input;
-	int	og_output;
-
-	if (!ft_is_builtin(cmd))
-	{
-		return (0);
-	}
-	og_input = -1;
-	og_output = -1;
-	pipe_redirection(cmd, &og_input, &og_output);
-	cmd->exit_status = ft_execute_buildin(cmd, env_list);
-	printf("BUILTIN = %s\n", cmd->cmd);
-	printf("%i\n", cmd->exit_status);
-	if (og_input > -1)
-		dup2_and_close(og_input, STDIN_FILENO);
-	if (og_output > 1)
-		dup2_and_close(og_output, STDOUT_FILENO);
-	return (1);
-}
-
-void	close_by_signal(t_cmds *cmd)
-{
-	if (cmd->exit_status > 128)
-	{
-		if (cmd->pipe_shift == 0)
-			close(cmd->pipe2[0]);
-		else
-			close(cmd->pipe1[0]);
-	}
-}
-
-//work on this so it takes own command linked list
-void	pipe_execution(t_cmds *cmd, t_env **env_list)
-{
-	int			exit_status;
-	t_cmds		*current_command;
-
-	current_command = cmd;
 	exit_status = 0;
-	cmd->pipe_shift = 1;
-	infile_fd(cmd, cmd->infile);
+	exec_data.pipe_shift = 1;
+	current_command = cmd;
+	set_in_fd(&exec_data, cmd->input);
 	while (current_command && exit_status < 128)
 	{
 		if (current_command->next != NULL)
-		{
-			pipe_setup(cmd);
-			printf("SETUP %s\n", current_command->cmd);
-		}
+			initiate_pipe(&exec_data);
 		else
-		{
-			outfile_fd(cmd, cmd->outfile);
-			printf("OUTFILE\n");
-		}
-		if (!check_or_exec_builtin(current_command, env_list))
-		{
-			exit_status = pipe_forker(current_command, env_list);
-			printf("FORK\n");
-		}
-		pipe_switcheroo(cmd);
-		printf("SWITCH\n");
+			set_out_fd(&exec_data, cmd->output);
+		if (!check_or_exec_builtin(current_command, &exec_data))
+			exit_status = fork_process(current_command, &exec_data, env_list);
+		rotator(&exec_data);
 		current_command = current_command->next;
-		cmd->exit_status = exit_status;
+		exec_data.exit_status = exit_status;
 	}
-	//close_pipes(cmd);
-	close_by_signal(cmd);
-	printf("FINISHED\n");
-	//ft_free_cmdlist(&cmd);
+	//close_pipes_signal(exec_data, exit_status);
 }
+
 
 
 

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 19:08:37 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/11 05:18:25 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,13 @@
 #define OUTPUT 4
 #define APPEND 8
 
+// pipe end
+#define READ_END 0
+#define WRITE_END 1
+
+// pipe itself
+#define NOQ
+
 /* Node to store the commands in a linked list */
 typedef struct s_cmds
 {
@@ -43,15 +50,20 @@ typedef struct s_cmds
 	char			**hdocs_end;
 	char			**to_file;
 	int				redirect;
-	int				amount_of_cmds;
-	int				pipe1[2];
-	int				pipe2[2];
-	int				infile;
-	int				outfile;
-	int				pipe_shift;
-	int				exit_status;
+	int				input;
+	int				output;
 	struct s_cmds	*next;
 }				t_cmds;
+
+typedef struct s_exec
+{
+	int				pipe1[2];
+	int				pipe2[2];
+	int				pipe_shift;
+	int				exit_status;
+}	t_exec;
+
+
 
 typedef struct s_env
 {
@@ -62,6 +74,13 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
+typedef struct s_data
+{
+	t_exec	*exec_data;
+	t_cmds	*cmd;
+	t_env	*env;
+}	t_data;
+
 /* A global variable to store the term attributes and exit status */
 typedef struct s_term
 {
@@ -71,7 +90,11 @@ typedef struct s_term
 
 t_term	g_term_attr;
 
-void	pipe_execution(t_cmds *cmd, t_env **env_list);
+
+int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data);
+int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);
+void	dup2_and_close(int from, int to);
+void	executor(t_cmds *cmd, t_env *env_list);
 int		ft_set_terminal(void);
 void	ft_quit_ignore(int sig);
 void	ft_convertsyscommands(t_cmds *cmd, t_env *envp);

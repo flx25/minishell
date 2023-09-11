@@ -27,6 +27,8 @@ SOURCES = main.c \
 			buildins.c \
 			buildins_2.c \
 			execution.c \
+			builtin.c \
+			fork.c \
 			messing_around.c \
 
 
