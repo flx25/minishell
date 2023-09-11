@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 05:43:23 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 05:48:20 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,11 @@ typedef struct s_exec
 	int				pipe1[2];
 	int				pipe2[2];
 	int				pipe_shift;
-	int				exit_status;
 }	t_exec;
-
-
 
 typedef struct s_env
 {
+	int				exit_status;
 	int				index;
 	char			*var;
 	char			*value;

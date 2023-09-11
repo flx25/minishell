@@ -67,7 +67,8 @@ void	executor(t_cmds *cmd, t_env *env_list)
 			exit_status = fork_process(current_command, &exec_data, env_list);
 		rotator(&exec_data);
 		current_command = current_command->next;
-		exec_data.exit_status = exit_status;
+		env_list->exit_status = exit_status;
+		printf("EXIT STATUS == %i\n", env_list->exit_status);
 	}
 	//close_pipes_signal(exec_data, exit_status);
 }
