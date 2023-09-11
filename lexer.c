@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:41:54 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 10:38:53 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:15:23 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_expansion(char *str, t_env *env_list)
 	if (!str)
 		return (ft_strdup("$"));
 	if (!ft_strcmp(str, "?"))
-		return (ft_itoa(g_term_attr.status));
+		return (ft_itoa(env_list->exit_status));
 	while (tmp)
 	{
 		if (!ft_strcmp(str, tmp->var))

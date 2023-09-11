@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:13:07 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/11 02:07:00 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:17:00 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		rotator(&exec_data);
 		current_command = current_command->next;
 		env_list->exit_status = exit_status;
-		printf("EXIT STATUS == %i\n", env_list->exit_status);
 	}
 	//close_pipes_signal(exec_data, exit_status);
 }
