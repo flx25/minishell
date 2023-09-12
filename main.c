@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 14:46:17 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/12 09:21:42 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	ft_free_envlist(t_env **env_list)
 
 void	ft_exit_minihell(char *str, t_env *env_list)
 {
-	tcsetattr(STDIN_FILENO, TCSANOW, &save_attr);
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_save_attr);
 	if (!str)
 	{
 		rl_on_new_line();
