@@ -6,18 +6,14 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 11:00:52 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/12 09:21:42 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-// not sure if completely working: 'syntax error near unexpected token '
-// "" still does not work as in bash
-// is a directory needs to be implemented instead of permission denied
-// needs command not found instead of no such file or directory
-// need to implement exit status
+//need signals
 
 int	ft_closing_qoutes(char *in_put)
 {
@@ -67,7 +63,7 @@ void	ft_free_envlist(t_env **env_list)
 
 void	ft_exit_minihell(char *str, t_env *env_list)
 {
-	tcsetattr(STDIN_FILENO, TCSANOW, &g_term_attr.save_attr);
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_save_attr);
 	if (!str)
 	{
 		rl_on_new_line();

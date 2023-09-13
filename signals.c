@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/04/17 14:07:42 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/12 09:21:11 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 void	ft_quit_ignore(int sig)
 {
 	write (1, "\n", 1);
-	//rl_replace_line("", 1);
+	rl_replace_line("", 1);
 	rl_on_new_line();
 	rl_redisplay();
 	return ((void)sig);
@@ -31,8 +31,8 @@ int	ft_set_terminal(void)
 	int				error;
 
 	error = 0;
-	error = tcgetattr(STDIN_FILENO, &g_term_attr.save_attr);
-	attr_new = g_term_attr.save_attr;
+	error = tcgetattr(STDIN_FILENO, &g_save_attr);
+	attr_new = g_save_attr;
 	attr_new.c_lflag &= ~ECHOCTL;
 	error = tcsetattr(STDIN_FILENO, TCSANOW, &attr_new);
 	return (error);
