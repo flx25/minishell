@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/13 10:41:19 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:02:58 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,10 +187,11 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 {
 	//char	**env_array;
 	//int		pid;
-
+	int i = 5;
 	//cmd->input = STDIN_FILENO;
 	//cmd->output = STDOUT_FILENO;
-	ft_execute_redirection(cmd);
+	while (i--)
+		ft_execute_redirection(cmd);
 	//if (ft_cmd_size(cmd) > 1)
 	executor(cmd, *env_list);
 	//else if (!ft_isnonsyscommand(cmd->cmd))
