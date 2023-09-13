@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 14:47:47 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/13 10:41:19 by kiabdura         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ char	**ft_create_env_array(t_env	*env_list)
 
 void	ft_infile_fd(t_cmds *cmd)
 {
-	int	infile;
+	//int	infile;
 
-	infile = 0;
+	cmd->input = 0;
 	if (!cmd->from_file)
 		return ;
 	if (access(cmd->from_file, F_OK | R_OK))
@@ -88,34 +88,38 @@ void	ft_infile_fd(t_cmds *cmd)
 	}
 	else
 	{
-		infile = open(cmd->from_file, O_RDONLY);
-		dup2(infile, STDIN_FILENO);
-		close(infile);
+		cmd->input = open(cmd->from_file, O_RDONLY);
+		//cmd->input = infile;
+		//dup2(cmd->input, STDIN_FILENO);
+		//close(cmd->input);
 	}
 }
 
-void	ft_outfile_fd(char *to_file, int redirect)
+void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 {
-	int	outfile;
+	//int	outfile;
 	int	flag;
 
 	flag = 0;
-	outfile = 0;
+	cmd->output = 0;
 	if (redirect & OUTPUT)
 		flag |= O_TRUNC;
 	else if (redirect & APPEND)
 		flag |= O_APPEND;
 	if (!access(to_file, F_OK | W_OK))
-		outfile = open(to_file, O_WRONLY | flag);
+	{
+		cmd->output = open(to_file, O_WRONLY | flag);
+		printf("OUTFILE_FD = %d\n", cmd->output);
+	}
 	else if (!access(to_file, F_OK))
 	{
 		printf("minihell: %s: %s\n", strerror(errno), to_file);
 		//g_term_attr.status = 1; -> maybe need to replace with envp
 	}
 	else
-		outfile = open(to_file, O_RDWR | O_CREAT | flag, 0666);
-	dup2(outfile, STDOUT_FILENO);
-	close(outfile);
+		cmd->output = open(to_file, O_RDWR | O_CREAT | flag, 0666);
+	//dup2(cmd->output, STDOUT_FILENO);
+	//close(cmd->output);
 }
 
 void	ft_here_doc(char **hdocs_end)
@@ -157,11 +161,13 @@ void	ft_execute_redirection(t_cmds *cmd)
 	if ((cmd->redirect & HEREDOC))
 		while (cmd->hdocs_end[++count])
 			ft_here_doc(&cmd->hdocs_end[count]);
+	printf("REDIRECT?= %d\n", cmd->redirect);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 	{
+		printf("layer\n");
 		count = -1;
 		while (cmd->to_file[++count])
-			ft_outfile_fd(cmd->to_file[count], cmd->redirect);
+			ft_outfile_fd(cmd, cmd->to_file[count], cmd->redirect);
 	}
 }
 
@@ -179,28 +185,29 @@ void	ft_execute_cmd(t_cmds *cmd, char **env_array)
 
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 {
-	char	**env_array;
-	int		pid;
+	//char	**env_array;
+	//int		pid;
 
-	cmd->input = STDIN_FILENO;
-	cmd->output = STDOUT_FILENO;
-	if (ft_cmd_size(cmd) > 1)
-		executor(cmd, *env_list);
-	else if (!ft_isnonsyscommand(cmd->cmd))
-	{
-		env_array = ft_create_env_array(*env_list);
-		pid = fork();
-		if (pid == 0)
-			ft_execute_cmd(cmd, env_array);
-		wait(NULL);
-		if ((cmd->redirect & HEREDOC))
-			unlink("minhell_tmp.txt");
-		ft_free_cmdlist(&cmd);
-		ft_free_dstr(env_array);
-	}
-	else
-	{
-		ft_execute_buildin(cmd, env_list);
-		ft_free_cmdlist(&cmd);
-	}
+	//cmd->input = STDIN_FILENO;
+	//cmd->output = STDOUT_FILENO;
+	ft_execute_redirection(cmd);
+	//if (ft_cmd_size(cmd) > 1)
+	executor(cmd, *env_list);
+	//else if (!ft_isnonsyscommand(cmd->cmd))
+	//{
+	//	env_array = ft_create_env_array(*env_list);
+	//	pid = fork();
+	//	if (pid == 0)
+	//		ft_execute_cmd(cmd, env_array);
+	//	wait(NULL);
+	//	if ((cmd->redirect & HEREDOC))
+	//		unlink("minhell_tmp.txt");
+	//	ft_free_cmdlist(&cmd);
+	//	ft_free_dstr(env_array);
+	//}
+	//else
+	//{
+	//	ft_execute_buildin(cmd, env_list);
+	//	ft_free_cmdlist(&cmd);
+	//}
 }

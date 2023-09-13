@@ -88,8 +88,8 @@ typedef struct s_term
 
 struct termios	g_save_attr;
 
-int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
-int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);
+int		check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
+int		fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);
 void	dup2_and_close(int from, int to);
 void	executor(t_cmds *cmd, t_env *env_list);
 int		ft_set_terminal(void);
