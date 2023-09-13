@@ -61,7 +61,7 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		if (current_command->next != NULL)
 			initiate_pipe(&exec_data);
 		else
-			set_out_fd(&exec_data, cmd->output);
+			set_out_fd(&exec_data, current_command->output);
 		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
 			exit_status = fork_process(current_command, &exec_data, env_list);
 		rotator(&exec_data);
