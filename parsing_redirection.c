@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_redirection.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:48:07 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/03 01:17:42 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:30:13 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 	int		count;
 	int		len;
 	int		redirect;
+	int		old_redirect;
 
 	count = -1;
 	while (cmd_table && cmd_table[++count])
@@ -123,9 +124,11 @@ int	ft_check_redirect(t_cmds *cmd, char **cmd_table)
 			len ++;
 			if ((redirect & HEREDOC) || (redirect & APPEND))
 				len ++;
-			cmd->redirect |= redirect;
+			old_redirect = cmd->redirect;
+			cmd->redirect = redirect;
 			if (ft_add_redirection(cmd_table, cmd, count, len))
 				return (free(cmd_table), 1);
+			cmd->redirect |= old_redirect;
 			ft_arrange_table(cmd_table, count, len);
 			count --;
 		}
