@@ -14,9 +14,6 @@
 #include "Libft/libft.h"
 
 //simply initializes both pipes
-#include "minishell.h"
-#include "Libft/libft.h"
-
 static void	initiate_pipe(t_exec *exec_data)
 {
 	if (exec_data->pipe_shift == 0)
