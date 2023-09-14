@@ -68,7 +68,7 @@ static void	close_pipe(t_exec *exec_data)
 int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list)
 {
 	int			pid;
-	int			exit_status;
+	//int			exit_status;
 
 	//handle_child_signals();
 	pid = fork();
@@ -79,9 +79,10 @@ int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list)
 		exit(127);
 	}
 	close_pipe(exec_data);
-	waitpid(pid, &exit_status, 0);
+	return(pid);
+	//waitpid(pid, &exit_status, 0);
 	//handle_parent_signals();
-	if (WIFSIGNALED(exit_status))
-		return (128 + WTERMSIG(exit_status));
-	return (WEXITSTATUS(exit_status));
+	//if (WIFSIGNALED(exit_status))
+	//	return (128 + WTERMSIG(exit_status));
+	//return (WEXITSTATUS(exit_status));
 }

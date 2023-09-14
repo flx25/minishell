@@ -46,12 +46,15 @@ static void	set_out_fd(t_exec *exec_data, int fd)
 
 // does not properly handle piped outfile redirections
 // attempt checking following command
+// VERY scuffed concurrency
+// heredocs work, however they exit
 void	executor(t_cmds *cmd, t_env *env_list)
 {
 	t_exec	exec_data;
 	t_cmds	*current_command;
 	int		exit_status;
-
+	int 	pid_array[10];
+	pid_t pid = 0;
 	exit_status = 0;
 	exec_data.pipe_shift = 1;
 	current_command = cmd;
@@ -68,16 +71,19 @@ void	executor(t_cmds *cmd, t_env *env_list)
 			set_out_fd(&exec_data, cmd->output);
 		}
 		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
-			exit_status = fork_process(current_command, &exec_data, env_list);
+			pid_array[pid] = fork_process(current_command, &exec_data, env_list);
 		rotator(&exec_data);
 		current_command = current_command->next;
 		env_list->exit_status = exit_status;
+		pid++;
+	}
+	while(pid_array[pid - 1])
+	{
+		waitpid(pid_array[pid], &exit_status, 0);
+		pid--;
+		//if (WIFSIGNALED(env_list->exit_status))
+		//	env_list->exit_status = 128 + WTERMSIG(env_list->exit_status);
+		//env_list->exit_status = WEXITSTATUS(env_list->exit_status);
 	}
 	//close_pipes_signal(exec_data, exit_status);
 }
-
-
-
-
-//make sure input redirection is properly handled so readline is
-//not trashed with input
