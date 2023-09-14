@@ -44,8 +44,8 @@ static void	set_out_fd(t_exec *exec_data, int fd)
 		exec_data->pipe1[WRITE_END] = fd;
 }
 
-// HANDLE INFILES AND OUTFILES THAT ARE NOT JUST SIMPLY
-// STDIN AND STDOUT
+// does not properly handle piped outfile redirections
+// attempt checking following command
 void	executor(t_cmds *cmd, t_env *env_list)
 {
 	t_exec	exec_data;
@@ -61,7 +61,12 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		if (current_command->next != NULL)
 			initiate_pipe(&exec_data);
 		else
-			set_out_fd(&exec_data, current_command->output);
+		{
+			if (current_command->redirect & APPEND || current_command->redirect & OUTPUT)
+				set_out_fd(&exec_data, current_command->output);
+			else
+			set_out_fd(&exec_data, cmd->output);
+		}
 		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
 			exit_status = fork_process(current_command, &exec_data, env_list);
 		rotator(&exec_data);

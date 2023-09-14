@@ -101,7 +101,7 @@ void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 	int	flag;
 
 	flag = 0;
-	cmd->output = 0;
+	cmd->output = STDOUT_FILENO;
 	if (redirect & OUTPUT)
 		flag |= O_TRUNC;
 	else if (redirect & APPEND)
@@ -188,8 +188,8 @@ void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)
 	//char	**env_array;
 	//int		pid;
 	t_cmds	*tmp;
-	//cmd->input = STDIN_FILENO;
-	//cmd->output = STDOUT_FILENO;
+	cmd->input = STDIN_FILENO;
+	cmd->output = STDOUT_FILENO;
 	tmp = cmd;
 	while (tmp)
 	{
