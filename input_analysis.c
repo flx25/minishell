@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/11 14:32:48 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/18 09:58:19 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,11 +173,27 @@ void	ft_removesurplusspaces(t_cmds *cmd)
 	tmp = cmd;
 	while (tmp)
 	{
+		if (!tmp->cmd)
+			return ;
 		if (!ft_isascii(tmp->cmd[0]) || tmp->cmd[0] == ' '
 			|| tmp->cmd[0] == '\t' || tmp->cmd[0] == '\v')
 			ft_removespaces(&tmp->cmd);
 		tmp = tmp->next;
 	}
+}
+
+int ft_checkforgarbage(t_cmds *cmd)
+{
+	t_cmds	*tmp;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		if (!tmp->cmd)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
 /* Used to check the input and pass it to the parsing and cutting
@@ -199,8 +215,7 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 		printf("minihell: syntax error near unexpected token `%s' \n", in_put);
 		return ;
 	}
-
-	if (!cmd->cmd || !strlen(cmd->cmd))
+	if (!cmd->cmd || !strlen(cmd->cmd) | ft_checkforgarbage(cmd))
 		return (ft_free_cmdlist(&cmd));
 	ft_removesurplusspaces(cmd);
 	ft_convertsyscommands(cmd, *env_list);

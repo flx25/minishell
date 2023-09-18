@@ -6,14 +6,13 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/12 09:21:42 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/14 14:20:14 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-//need signals
 
 int	ft_closing_qoutes(char *in_put)
 {
