@@ -88,6 +88,7 @@ typedef struct s_term
 
 struct termios	g_save_attr;
 
+int		ft_here_doc(char **hdocs_end, t_cmds *cmd);
 int		check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
 int		fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);
 void	dup2_and_close(int from, int to);

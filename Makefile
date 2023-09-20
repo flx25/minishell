@@ -30,6 +30,7 @@ SOURCES = main.c \
 			builtin.c \
 			fork.c \
 			messing_around.c \
+			heredoc.c	\
 
 
 NAME = minishell

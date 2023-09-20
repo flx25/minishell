@@ -122,34 +122,34 @@ void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 	//close(cmd->output);
 }
 
-void	ft_here_doc(char **hdocs_end)
-{
-	char	*str;
-	char	*delimiter;
-	int		nofile;
-
-	delimiter = ft_strjoin(hdocs_end[0], "\n");
-	if (!access("minhell_tmp.txt", F_OK))
-		unlink("minhell_tmp.txt");
-	nofile = open("minhell_tmp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
-	write(1, "heredoc> ", 9);
-	str = get_next_line(0);
-	while (ft_strcmp(str, delimiter))
-	{
-		write(nofile, str, ft_strlen(str));
-		free(str);
-		write(1, "heredoc> ", 9);
-		str = get_next_line(0);
-	}
-	free(str);
-	free(delimiter);
-	close(nofile);
-	if (hdocs_end[1])
-		return ;
-	nofile = open("minhell_tmp.txt", O_RDONLY);
-	dup2(nofile, STDIN_FILENO);
-	close(nofile);
-}
+//void	ft_here_doc(char **hdocs_end, t_cmds *cmd)
+//{
+//	char	*str;
+//	char	*delimiter;
+//	//int		nofile;
+//
+//	cmd->output = ft_strjoin(hdocs_end[0], "\n");
+//	if (!access("minhell_tmp.txt", F_OK))
+//		unlink("minhell_tmp.txt");
+//	cmd->output = open("minhell_tmp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
+//	write(1, "heredoc> ", 9);
+//	str = get_next_line(0);
+//	while (ft_strcmp(str, delimiter))
+//	{
+//		write(cmd->output, str, ft_strlen(str));
+//		free(str);
+//		write(1, "heredoc> ", 9);
+//		str = get_next_line(0);
+//	}
+//	free(str);
+//	free(delimiter);
+//	close(cmd->output);
+//	if (hdocs_end[1])
+//		return ;
+//	cmd->output = open("minhell_tmp.txt", O_RDONLY);
+//	//dup2(nofile, STDIN_FILENO);
+//	//close(nofile);
+//}
 
 void	ft_execute_redirection(t_cmds *cmd)
 {
@@ -160,7 +160,7 @@ void	ft_execute_redirection(t_cmds *cmd)
 		ft_infile_fd(cmd);
 	if ((cmd->redirect & HEREDOC))
 		while (cmd->hdocs_end[++count])
-			ft_here_doc(&cmd->hdocs_end[count]);
+			ft_here_doc(&cmd->hdocs_end[count], cmd);
 	printf("REDIRECT?= %d\n", cmd->redirect);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 	{

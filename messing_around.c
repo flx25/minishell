@@ -68,7 +68,7 @@ void	executor(t_cmds *cmd, t_env *env_list)
 			if (current_command->redirect & APPEND || current_command->redirect & OUTPUT)
 				set_out_fd(&exec_data, current_command->output);
 			else
-			set_out_fd(&exec_data, cmd->output);
+				set_out_fd(&exec_data, cmd->output);
 		}
 		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
 			pid_array[pid] = fork_process(current_command, &exec_data, env_list);
@@ -77,7 +77,7 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		env_list->exit_status = exit_status;
 		pid++;
 	}
-	while(pid_array[pid - 1])
+	while(pid_array[pid])
 	{
 		waitpid(pid_array[pid], &exit_status, 0);
 		pid--;
