@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/21 09:16:16 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/21 10:06:39 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
 		return (ft_unset(cmd->args, env_list));
 	else if (!ft_strcmp(cmd->cmd, "echo"))
 		return (ft_echo(cmd->args));
-	//check whether 1 or 0 is proper success return value
 	return (0);
 }
 
@@ -75,8 +74,6 @@ char	**ft_create_env_array(t_env	*env_list)
 
 void	ft_infile_fd(t_cmds *cmd)
 {
-	//int	infile;
-
 	cmd->input = 0;
 	if (!cmd->from_file)
 		return ;
@@ -84,20 +81,15 @@ void	ft_infile_fd(t_cmds *cmd)
 	{
 		if (access(cmd->from_file, F_OK))
 			// g_term_attr.status = 1; --> exit code
-		printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
+			printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
 	}
 	else
-	{
 		cmd->input = open(cmd->from_file, O_RDONLY);
-		//cmd->input = infile;
-		//dup2(cmd->input, STDIN_FILENO);
-		//close(cmd->input);
-	}
+
 }
 
 void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 {
-	//int	outfile;
 	int	flag;
 
 	flag = 0;
@@ -118,38 +110,7 @@ void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 	}
 	else
 		cmd->output = open(to_file, O_RDWR | O_CREAT | flag, 0666);
-	//dup2(cmd->output, STDOUT_FILENO);
-	//close(cmd->output);
 }
-
-//void	ft_here_doc(char **hdocs_end, t_cmds *cmd)
-//{
-//	char	*str;
-//	char	*delimiter;
-//	//int		nofile;
-//
-//	cmd->output = ft_strjoin(hdocs_end[0], "\n");
-//	if (!access("minhell_tmp.txt", F_OK))
-//		unlink("minhell_tmp.txt");
-//	cmd->output = open("minhell_tmp.txt", O_RDWR | O_CREAT | O_APPEND, 0666);
-//	write(1, "heredoc> ", 9);
-//	str = get_next_line(0);
-//	while (ft_strcmp(str, delimiter))
-//	{
-//		write(cmd->output, str, ft_strlen(str));
-//		free(str);
-//		write(1, "heredoc> ", 9);
-//		str = get_next_line(0);
-//	}
-//	free(str);
-//	free(delimiter);
-//	close(cmd->output);
-//	if (hdocs_end[1])
-//		return ;
-//	cmd->output = open("minhell_tmp.txt", O_RDONLY);
-//	//dup2(nofile, STDIN_FILENO);
-//	//close(nofile);
-//}
 
 void	ft_execute_redirection(t_cmds *cmd)
 {
