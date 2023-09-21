@@ -53,37 +53,41 @@ void	executor(t_cmds *cmd, t_env *env_list)
 	t_exec	exec_data;
 	t_cmds	*current_command;
 	int		exit_status;
-	int 	pid_array[10];
-	pid_t pid = 0;
+	int		pids[10];
+	pid_t	pid;
+
+	pid = 0;
 	exit_status = 0;
 	exec_data.pipe_shift = 1;
 	current_command = cmd;
 	set_in_fd(&exec_data, cmd->input);
-	while (current_command && exit_status < 128)
+	while (current_command && env_list->exit_status < 128)
 	{
 		if (current_command->next != NULL)
 			initiate_pipe(&exec_data);
 		else
 		{
-			if (current_command->redirect & APPEND || current_command->redirect & OUTPUT)
+			if (current_command->redirect & APPEND
+				|| current_command->redirect & OUTPUT)
 				set_out_fd(&exec_data, current_command->output);
 			else
 				set_out_fd(&exec_data, cmd->output);
 		}
 		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
-			pid_array[pid] = fork_process(current_command, &exec_data, env_list);
+			pids[pid] = fork_process(current_command, &exec_data, env_list);
 		rotator(&exec_data);
 		current_command = current_command->next;
 		env_list->exit_status = exit_status;
 		pid++;
 	}
-	while(pid_array[pid])
+	while (pids[pid])
 	{
-		waitpid(pid_array[pid], &exit_status, 0);
-		pid--;
+		waitpid(pids[pid], &exit_status, 0);
 		//if (WIFSIGNALED(env_list->exit_status))
 		//	env_list->exit_status = 128 + WTERMSIG(env_list->exit_status);
 		//env_list->exit_status = WEXITSTATUS(env_list->exit_status);
+		//printf("EXIT STATUS = %d\n", env_list->exit_status);
+		pid--;
 	}
 	//close_pipes_signal(exec_data, exit_status);
 }

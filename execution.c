@@ -12,8 +12,6 @@
 
 #include "Libft/libft.h"
 #include "minishell.h"
-#include <fcntl.h>
-#include <unistd.h>
 
 int	ft_cmd_size(t_cmds *cmd)
 {
@@ -70,78 +68,6 @@ char	**ft_create_env_array(t_env	*env_list)
 		tmp_list = tmp_list->next;
 	}
 	return (env_array);
-}
-
-void	ft_infile_fd(t_cmds *cmd)
-{
-	cmd->input = 0;
-	if (!cmd->from_file)
-		return ;
-	if (access(cmd->from_file, F_OK | R_OK))
-	{
-		if (access(cmd->from_file, F_OK))
-			// g_term_attr.status = 1; --> exit code
-			printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
-	}
-	else
-		cmd->input = open(cmd->from_file, O_RDONLY);
-
-}
-
-void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
-{
-	int	flag;
-
-	flag = 0;
-	cmd->output = STDOUT_FILENO;
-	if (redirect & OUTPUT)
-		flag |= O_TRUNC;
-	else if (redirect & APPEND)
-		flag |= O_APPEND;
-	if (!access(to_file, F_OK | W_OK))
-	{
-		cmd->output = open(to_file, O_WRONLY | flag);
-		printf("OUTFILE_FD = %d\n", cmd->output);
-	}
-	else if (!access(to_file, F_OK))
-	{
-		printf("minihell: %s: %s\n", strerror(errno), to_file);
-		//g_term_attr.status = 1; -> maybe need to replace with envp
-	}
-	else
-		cmd->output = open(to_file, O_RDWR | O_CREAT | flag, 0666);
-}
-
-void	ft_execute_redirection(t_cmds *cmd)
-{
-	int	count;
-
-	count = -1;
-	if ((cmd->redirect & INPUT))
-		ft_infile_fd(cmd);
-	if ((cmd->redirect & HEREDOC))
-		while (cmd->hdocs_end[++count])
-			ft_here_doc(&cmd->hdocs_end[count], cmd);
-	printf("REDIRECT?= %d\n", cmd->redirect);
-	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
-	{
-		printf("layer\n");
-		count = -1;
-		while (cmd->to_file[++count])
-			ft_outfile_fd(cmd, cmd->to_file[count], cmd->redirect);
-	}
-}
-
-void	ft_execute_cmd(t_cmds *cmd, char **env_array)
-{
-	ft_execute_redirection(cmd);
-	if (!cmd->full_cmd)
-		exit(1);
-	if (execve(cmd->full_cmd[0], cmd->full_cmd, env_array))
-	{
-		printf("minihell: %s:%s\n", strerror(errno), cmd->cmd);
-		exit(1);
-	}
 }
 
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list)

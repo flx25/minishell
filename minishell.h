@@ -25,6 +25,8 @@
 # include <unistd.h>
 # include <termios.h>
 # include <sys/stat.h>
+# include <fcntl.h>
+# include <unistd.h>
 # include "./Libft/libft.h"
 # define PROMPT "\033[35mminihell\033[36m$\033[0m "
 # define DIRECTION_ERR "minishell: syntax error near unexpected token"
@@ -54,6 +56,12 @@ typedef struct s_cmds
 	int				output;
 	struct s_cmds	*next;
 }				t_cmds;
+
+typedef struct s_pidNODE
+{
+	pid_t				pid;
+	struct s_pidNODE	*next;
+}		t_pidNODE;
 
 typedef struct s_exec
 {
@@ -88,6 +96,7 @@ typedef struct s_term
 
 struct termios	g_save_attr;
 
+void	ft_execute_redirection(t_cmds *cmd);
 int		ft_here_doc(char **hdocs_end, t_cmds *cmd);
 int		check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);
 int		fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list);

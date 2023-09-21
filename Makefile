@@ -32,6 +32,8 @@ SOURCES = main.c \
 			messing_around.c \
 			input_analysis_2.c \
 			parsing_redirection_2.c \
+			heredoc.c \
+			fd_redirection.c \
 
 
 NAME = minishell
