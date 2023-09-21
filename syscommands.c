@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 09:47:30 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/05/02 18:31:52 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:09:46 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_checkpaths(char *command, char **paths)
 {
 	int		i;
 	char	*pathcommand;
-	//need to check for execution/existance seperately
+
 	i = 0;
 	if (!command)
 		return (-1);

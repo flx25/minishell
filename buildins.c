@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 10:56:48 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/08/25 12:56:00 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:38:32 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_cd(char **args, t_env *envp)
 			return (printf("bash: cd: %s: Not a directory\n", args[0]), 1);
 		else
 		{
-				chdirrt = chdir(args[0]);
+			chdirrt = chdir(args[0]);
 			if (chdirrt == -1)
 				return (perror("cd"), 1);
 			else

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/12 09:20:47 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:25:29 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,19 @@
 # include <termios.h>
 # include <sys/stat.h>
 # include "./Libft/libft.h"
-#define PROMPT "\033[35mminihell\033[36m$\033[0m "
-#define DIRECTION_ERR "minishell: syntax error near unexpected token"
-#define INPUT 1
-#define HEREDOC 2
-#define OUTPUT 4
-#define APPEND 8
+# define PROMPT "\033[35mminihell\033[36m$\033[0m "
+# define DIRECTION_ERR "minishell: syntax error near unexpected token"
+# define INPUT 1
+# define HEREDOC 2
+# define OUTPUT 4
+# define APPEND 8
 
 // pipe end
-#define READ_END 0
-#define WRITE_END 1
+# define READ_END 0
+# define WRITE_END 1
 
 // pipe itself
-#define NOQ
+# define NOQ
 
 /* Node to store the commands in a linked list */
 typedef struct s_cmds
@@ -135,7 +135,7 @@ void	ft_free_cmdlist(t_cmds **cmds);
 char	*ft_expansion(char *str, t_env *env_list);
 char	*ft_getenv_var(char *in_put, int *index, t_env *env_list);
 char	*ft_inside_qoutes(char *str, char *in_put,
-		int *index, t_env *env_list);
+			int *index, t_env *env_list);
 char	*ft_tokenize(char *str, char *in_put, int *index, t_env *env_list);
 char	**ft_lexer(char *in_put, t_env *env_list);
 

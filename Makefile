@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/05/02 17:32:53 by melkholy         ###   ########.fr        #
+#    Updated: 2023/09/21 09:28:26 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ SOURCES = main.c \
 			builtin.c \
 			fork.c \
 			messing_around.c \
-			heredoc.c	\
+			input_analysis_2.c \
+			parsing_redirection_2.c \
 
 
 NAME = minishell

@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiabdura <kiabdura@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 04:28:10 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/11 05:48:20 by kiabdura         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:34:35 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "Libft/libft.h"
-
-// make sure to add proper EXIT_SUCESS/EXIT_FAILURE
 
 static void	dup_pipe(t_exec *exec_data,
 						int *original_input, int *original_output)
@@ -53,12 +51,9 @@ int	is_builtin(t_cmds *cmd)
 
 int	check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list)
 {
-	//int	(*builtin)(t_cmds *, char **);
 	int	original_input;
 	int	original_output;
 
-	// for this make sure to EXIT_SUCCESS in the according functions
-	//builtin = get_builtin_function(cmd->cmd);
 	if (!is_builtin(cmd))
 		return (0);
 	original_input = -1;

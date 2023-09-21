@@ -6,13 +6,12 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/20 13:25:19 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:14:48 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
-
 
 int	ft_closing_qoutes(char *in_put)
 {

@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:32:18 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/26 09:04:14 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:32:56 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	ft_isbeforeinalph(char *varname, char *tmpvar)
 		return (0);
 	else
 		return (1);
-
 }
 
 int	ft_isnotprinted(t_env *envp, int *indexprinted, int withcostumvars)
@@ -99,5 +98,4 @@ void	ft_printnextalpha(t_env *envp, int *indexprinted)
 	else
 		printf("declare -x %s\n", tmp_2->var);
 	ft_setindexprinted(envp, tmp_2->index, indexprinted);
-	//most likely need to free (not sure though)
 }

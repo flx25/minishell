@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/05/02 15:43:06 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:37:40 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_rearrange_indexes(t_env *envp)
 
 void	ft_unset_loop(t_env *tmp, t_env *tmp_last, t_env **envp, char *arg)
 {
-	// int		nodeindex;
 	t_env	*to_free;
 
 	while (tmp)
@@ -39,7 +38,6 @@ void	ft_unset_loop(t_env *tmp, t_env *tmp_last, t_env **envp, char *arg)
 		if (!ft_strcmp(tmp->var, arg))
 		{
 			to_free = tmp;
-			// nodeindex = to_free->index;
 			if (tmp_last)
 				tmp_last->next = tmp->next;
 			else

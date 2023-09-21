@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: melkholy <melkholy@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 15:57:11 by melkholy          #+#    #+#             */
-/*   Updated: 2023/05/02 18:56:29 by melkholy         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:10:11 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ char	**ft_double_realloc(char **str, int old_size, int new_size)
 	char	**tmp;
 	int		count;
 
-	// if (!str)
-	// 	return ((char **)ft_calloc(new_size, sizeof(char *)));
 	tmp = (char **)ft_calloc(new_size, sizeof(char *));
 	count = 0;
 	while (count < old_size)

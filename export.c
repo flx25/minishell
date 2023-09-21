@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 15:35:58 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 10:26:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/21 09:33:39 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,8 @@ void	ft_listvariables(t_env *envp)
 int	ft_export(char **args, t_env **envp)
 {
 	if (args)
-		ft_export_arg(args, envp, *envp, 0); // does not work yet when every env variable has been unset before (maybe add an empty one in order to keep it in place)
+		ft_export_arg(args, envp, *envp, 0);
 	else
 		ft_listvariables(*envp);
 	return (0);
 }
-
