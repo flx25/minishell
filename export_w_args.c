@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:37:20 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/04/27 10:40:35 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 11:21:48 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	ft_check_and_edit_existing_var(char **args, t_env *tmp, int i)
 		free(varname);
 		return (1);
 	}
+	free(varvalue);
 	free(varname);
 	return (0);
 }
