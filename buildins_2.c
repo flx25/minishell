@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/09/21 09:37:40 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 11:04:58 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ int	ft_pwd(void)
 
 	pwd = ft_calloc(1024, sizeof(char));
 	if (!pwd)
-		return (1);
+		return (free(pwd), 1);
+	free(pwd);
 	pwd = getcwd(NULL, 0);
 	printf("%s\n", pwd);
 	free(pwd);
