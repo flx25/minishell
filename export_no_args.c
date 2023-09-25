@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 11:32:18 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/09/21 09:32:56 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 10:59:50 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,10 @@ void	ft_printnextalpha(t_env *envp, int *indexprinted)
 	t_env	*tmp_2;
 
 	tmp = envp;
-	tmp_2 = ft_calloc(1, sizeof(t_env));
+	tmp_2 = NULL;
 	while (tmp)
 	{
-		if (!indexprinted[tmp->index] && (!tmp_2->var
+		if (!indexprinted[tmp->index] && (!tmp_2 || !tmp_2->var
 				|| ft_isbeforeinalph(tmp_2->var, tmp->var)))
 			tmp_2 = tmp;
 		if (tmp->next)
