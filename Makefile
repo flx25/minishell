@@ -34,6 +34,7 @@ SOURCES = main.c \
 			parsing_redirection_2.c \
 			heredoc.c \
 			fd_redirection.c \
+			child_executor.c \
 
 
 NAME = minishell

@@ -97,6 +97,10 @@ typedef struct s_term
 
 struct termios	g_save_attr;
 
+void	initiate_pipe(t_exec *exec_data);
+void	rotator(t_exec *exec_data);
+void	set_in_fd(t_exec *exec_data, int fd);
+void	set_out_fd(t_exec *exec_data, int fd);
 void	ft_execute_redirection(t_cmds *cmd);
 int		ft_here_doc(char **hdocs_end, t_cmds *cmd);
 int		check_or_exec_builtin(t_cmds *cmd, t_exec *exec_data, t_env *env_list);

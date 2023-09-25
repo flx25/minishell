@@ -68,9 +68,7 @@ static void	close_pipe(t_exec *exec_data)
 int	fork_process(t_cmds	*cmd, t_exec *exec_data, t_env *env_list)
 {
 	int			pid;
-	//int			exit_status;
 
-	//handle_child_signals();
 	pid = fork();
 	if (pid == 0)
 	{
