@@ -6,13 +6,15 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/21 09:14:48 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 09:59:50 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
+// no such file or directoy gives wrong exit status
+// our global variable seems to not have anything to do with signals
 int	ft_closing_qoutes(char *in_put)
 {
 	char	divid;

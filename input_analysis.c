@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/21 09:31:58 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 09:51:42 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,6 @@ void	ft_parse_input(char *in_put, t_env **env_list)
 	ft_removesurplusspaces(cmd);
 	ft_convertsyscommands(cmd, *env_list);
 	ft_create_fullcmd(cmd);
+	ft_add_env_lastcmd(cmd, *env_list);
 	ft_cmd_analysis(cmd, env_list);
 }

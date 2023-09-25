@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/21 09:25:29 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 09:51:21 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_data
 	t_env	*env;
 }	t_data;
 
-/* A global variable to store the term attributes and exit status */
+/* A global variable to store the term attributes */
 typedef struct s_term
 {
 	struct termios	save_attr;
@@ -132,6 +132,7 @@ int		ft_echo(char **args);
 void	ft_cmd_analysis(t_cmds *cmd, t_env **env_list);
 int		ft_execute_buildin(t_cmds *cmd, t_env **env_list);
 char	**ft_create_env_array(t_env	*env_list);
+void	ft_add_env_lastcmd(t_cmds *cmd, t_env *env_list);
 
 /* input_analysis.c */
 void	ft_parse_input(char *in_put, t_env **env_list);

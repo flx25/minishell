@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 09:23:54 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/09/21 09:25:33 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 09:58:01 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,27 @@ t_env	*ft_get_envp(char **envp)
 		tmp = tmp->next;
 	}
 	return (head);
+}
+
+void	ft_add_env_lastcmd(t_cmds *cmd, t_env *env_list)
+{
+	t_env	*tmp_env;
+	t_cmds	*tmp_cmd;
+
+	tmp_env = env_list;
+	tmp_cmd = cmd;
+	while (tmp_env)
+	{
+		if (!ft_strcmp(tmp_env->var, "_"))
+		{
+			if (tmp_env->value)
+				free(tmp_env->value);
+			if (tmp_cmd->next)
+				tmp_env->value = ft_calloc(1, sizeof(char));
+			else
+				tmp_env->value = ft_strdup(cmd->cmd);
+			return ;
+		}
+		tmp_env = tmp_env->next;
+	}
 }
