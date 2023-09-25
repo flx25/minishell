@@ -68,6 +68,7 @@ typedef struct s_exec
 	int				pipe1[2];
 	int				pipe2[2];
 	int				pipe_shift;
+	int				trigger;
 }	t_exec;
 
 typedef struct s_env

@@ -174,11 +174,17 @@ void	add_pid_to_list(pid_t pid, t_pidNODE **pids)
 	}
 }
 
-void	execute_command(t_cmds *cmd, t_cmds *current_cmd, t_exec *exec_data,
+void	execute_command(t_cmds *current_cmd, t_exec *exec_data,
 						t_env *env_list, t_pidNODE **pids)
 {
 	pid_t	pid;
+	t_cmds	*cmd;
 
+	if (exec_data->trigger == 0)
+	{
+		cmd = current_cmd;
+		exec_data->trigger = 1;
+	}
 	if (current_cmd->next != NULL)
 		initiate_pipe(exec_data);
 	else
@@ -197,39 +203,74 @@ void	execute_command(t_cmds *cmd, t_cmds *current_cmd, t_exec *exec_data,
 }
 
 //maybe return exit status
-void	wait_for_child_processes(t_pidNODE *pids, int *exit_status)
+//int	wait_for_child_processes(t_pidNODE *pids, int *exit_status)
+//{
+//	t_pidNODE	*temp;
+//
+//	while (pids != NULL)
+//	{
+//		waitpid(pids->pid, exit_status, 0);
+//		// Handle exit status as needed (WIFSIGNALED, WEXITSTATUS, etc.)
+//		temp = pids;
+//		pids = pids->next;
+//		free(temp);
+//		if (WIFSIGNALED(exit_status))
+//			return (128 + WTERMSIG(exit_status));
+//	}
+//
+//	return (WEXITSTATUS(exit_status));
+//}
+
+int wait_for_child_processes(t_pidNODE *pids, int *exit_status)
 {
-	t_pidNODE	*temp;
+	t_pidNODE *temp;
+	int status;
 
 	while (pids != NULL)
 	{
-		waitpid(pids->pid, exit_status, 0);
-		// Handle exit status as needed (WIFSIGNALED, WEXITSTATUS, etc.)
+		waitpid(pids->pid, &status, 0);
+		if (WIFEXITED(status))
+		{
+			// Child process exited normally
+			*exit_status = WEXITSTATUS(status);
+			return (*exit_status);
+		}
+		else if (WIFSIGNALED(status))
+		{
+			// Child process terminated by a signal
+			printf("Child process %d terminated by signal %d\n", pids->pid, WTERMSIG(status));
+			*exit_status = -1; // You can set a special value or handle this case as needed
+			return (*exit_status);
+		}
+
 		temp = pids;
 		pids = pids->next;
-		free(temp); // Free the dynamically allocated PID nodes
+		free(temp);
 	}
+	return (*exit_status);
 }
+
 
 void executor(t_cmds *cmd, t_env *env_list)
 {
 	t_exec		exec_data;
 	t_cmds		*current_command;
 	t_pidNODE	*pids;
-	int			exit_status = 0;
+	int			exit_status;
 
+	exit_status = 0;
 	current_command = cmd;
 	pids = NULL;
 	exit_status = 0;
 	exec_data.pipe_shift = 1;
 	set_in_fd(&exec_data, cmd->input);
+	exec_data.trigger = 0;
 	while (current_command)
 	{
-		execute_command(cmd, current_command, &exec_data, env_list, &pids);
+		execute_command(current_command, &exec_data, env_list, &pids);
 		current_command = current_command->next;
 		env_list->exit_status = exit_status;
-		printf("EXIT STATUS = %d\n", env_list->exit_status);
 	}
-	wait_for_child_processes(pids, &exit_status);
-	// Close pipes and handle signals if needed
+	env_list->exit_status = wait_for_child_processes(pids, &exit_status);
+	printf("EXIT STATUS = %d\n", env_list->exit_status);
 }
