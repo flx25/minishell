@@ -29,12 +29,12 @@ SOURCES = main.c \
 			execution.c \
 			builtin.c \
 			fork.c \
-			messing_around.c \
 			input_analysis_2.c \
 			parsing_redirection_2.c \
 			heredoc.c \
 			fd_redirection.c \
 			child_executor.c \
+			piping.c \
 
 
 NAME = minishell

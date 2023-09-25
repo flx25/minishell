@@ -41,7 +41,6 @@ void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 	if (!access(to_file, F_OK | W_OK))
 	{
 		cmd->output = open(to_file, O_WRONLY | flag);
-		printf("OUTFILE_FD = %d\n", cmd->output);
 	}
 	else if (!access(to_file, F_OK))
 	{
@@ -62,10 +61,8 @@ void	ft_execute_redirection(t_cmds *cmd)
 	if ((cmd->redirect & HEREDOC))
 		while (cmd->hdocs_end[++count])
 			ft_here_doc(&cmd->hdocs_end[count], cmd);
-	printf("REDIRECT?= %d\n", cmd->redirect);
 	if ((cmd->redirect & OUTPUT) || (cmd->redirect & APPEND))
 	{
-		printf("layer\n");
 		count = -1;
 		while (cmd->to_file[++count])
 			ft_outfile_fd(cmd, cmd->to_file[count], cmd->redirect);
