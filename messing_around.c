@@ -87,64 +87,149 @@ static void	set_out_fd(t_exec *exec_data, int fd)
 //}
 
 //prototype
+//void executor(t_cmds *cmd, t_env *env_list)
+//{
+//	t_exec exec_data;
+//	t_cmds *current_command = cmd;
+//	t_pidNODE *pids = NULL;
+//	int exit_status = 0;
+//
+//	exec_data.pipe_shift = 1;
+//	set_in_fd(&exec_data, cmd->input);
+//
+//	while (current_command && env_list->exit_status < 128)
+//	{
+//		if (current_command->next != NULL)
+//			initiate_pipe(&exec_data);
+//		else
+//		{
+//			if (current_command->redirect & APPEND
+//				|| current_command->redirect & OUTPUT)
+//				set_out_fd(&exec_data, current_command->output);
+//			else
+//				set_out_fd(&exec_data, cmd->output);
+//		}
+//		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
+//		{
+//			pid_t pid = fork_process(current_command, &exec_data, env_list);
+//			// Create a new node for the PID linked list
+//			t_pidNODE* newNode = malloc(sizeof(t_pidNODE));
+//			if (newNode == NULL)
+//			{
+//				perror("malloc");
+//				exit(1); // Handle allocation failure as needed
+//			}
+//			newNode->pid = pid;
+//			newNode->next = NULL;
+//			// Add the new node to the end of the linked list
+//			if (pids == NULL)
+//				pids = newNode; // If the list is empty, make the new node the head
+//			else
+//			{
+//				t_pidNODE* temp = pids;
+//				while (temp->next != NULL)
+//					temp = temp->next;
+//				temp->next = newNode;
+//			}
+//		}
+//		rotator(&exec_data);
+//		current_command = current_command->next;
+//		env_list->exit_status = exit_status;
+//		printf("EXIT STATUS = %d\n", env_list->exit_status);
+//	}
+//	// Wait for and collect the exit statuses of child processes
+//	while (pids != NULL)
+//	{
+//		waitpid(pids->pid, &exit_status, 0);
+//		// Handle exit status as needed (WIFSIGNALED, WEXITSTATUS, etc.)
+//		t_pidNODE* temp = pids;
+//		pids = pids->next;
+//		free(temp); // Free the dynamically allocated PID nodes
+//	}
+//	// Close pipes and handle signals if needed
+//}
+
+//IS GOOD BUT EXITS
+void	add_pid_to_list(pid_t pid, t_pidNODE **pids)
+{
+	t_pidNODE	*new_node;
+	t_pidNODE	*temp;
+
+	new_node = malloc(sizeof(t_pidNODE));
+	if (new_node == NULL)
+	{
+		perror("malloc");
+		exit(1); // Handle allocation failure as needed
+	}
+	new_node->pid = pid;
+	new_node->next = NULL;
+	if (*pids == NULL)
+		*pids = new_node;
+	else
+	{
+		temp = *pids;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new_node;
+	}
+}
+
+void	execute_command(t_cmds *cmd, t_cmds *current_cmd, t_exec *exec_data,
+						t_env *env_list, t_pidNODE **pids)
+{
+	pid_t	pid;
+
+	if (current_cmd->next != NULL)
+		initiate_pipe(exec_data);
+	else
+	{
+		if (current_cmd->redirect & APPEND || current_cmd->redirect & OUTPUT)
+			set_out_fd(exec_data, current_cmd->output);
+		else
+			set_out_fd(exec_data, cmd->output);
+	}
+	if (!check_or_exec_builtin(current_cmd, exec_data, env_list))
+	{
+		pid = fork_process(current_cmd, exec_data, env_list);
+		add_pid_to_list(pid, pids);
+	}
+	rotator(exec_data);
+}
+
+//maybe return exit status
+void	wait_for_child_processes(t_pidNODE *pids, int *exit_status)
+{
+	t_pidNODE	*temp;
+
+	while (pids != NULL)
+	{
+		waitpid(pids->pid, exit_status, 0);
+		// Handle exit status as needed (WIFSIGNALED, WEXITSTATUS, etc.)
+		temp = pids;
+		pids = pids->next;
+		free(temp); // Free the dynamically allocated PID nodes
+	}
+}
+
 void executor(t_cmds *cmd, t_env *env_list)
 {
-	t_exec exec_data;
-	t_cmds *current_command = cmd;
-	t_pidNODE *pids = NULL;
-	int exit_status = 0;
+	t_exec		exec_data;
+	t_cmds		*current_command;
+	t_pidNODE	*pids;
+	int			exit_status = 0;
 
+	current_command = cmd;
+	pids = NULL;
+	exit_status = 0;
 	exec_data.pipe_shift = 1;
 	set_in_fd(&exec_data, cmd->input);
-
-	while (current_command && env_list->exit_status < 128)
+	while (current_command)
 	{
-		if (current_command->next != NULL)
-			initiate_pipe(&exec_data);
-		else
-		{
-			if (current_command->redirect & APPEND
-				|| current_command->redirect & OUTPUT)
-				set_out_fd(&exec_data, current_command->output);
-			else
-				set_out_fd(&exec_data, cmd->output);
-		}
-		if (!check_or_exec_builtin(current_command, &exec_data, env_list))
-		{
-			pid_t pid = fork_process(current_command, &exec_data, env_list);
-			// Create a new node for the PID linked list
-			t_pidNODE* newNode = malloc(sizeof(t_pidNODE));
-			if (newNode == NULL)
-			{
-				perror("malloc");
-				exit(1); // Handle allocation failure as needed
-			}
-			newNode->pid = pid;
-			newNode->next = NULL;
-			// Add the new node to the end of the linked list
-			if (pids == NULL)
-				pids = newNode; // If the list is empty, make the new node the head
-			else
-			{
-				t_pidNODE* temp = pids;
-				while (temp->next != NULL)
-					temp = temp->next;
-				temp->next = newNode;
-			}
-		}
-		rotator(&exec_data);
+		execute_command(cmd, current_command, &exec_data, env_list, &pids);
 		current_command = current_command->next;
 		env_list->exit_status = exit_status;
 		printf("EXIT STATUS = %d\n", env_list->exit_status);
 	}
-	// Wait for and collect the exit statuses of child processes
-	while (pids != NULL)
-	{
-		waitpid(pids->pid, &exit_status, 0);
-		// Handle exit status as needed (WIFSIGNALED, WEXITSTATUS, etc.)
-		t_pidNODE* temp = pids;
-		pids = pids->next;
-		free(temp); // Free the dynamically allocated PID nodes
-	}
+	wait_for_child_processes(pids, &exit_status);
 	// Close pipes and handle signals if needed
 }
