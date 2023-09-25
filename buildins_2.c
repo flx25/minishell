@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:14:45 by fvon-nag          #+#    #+#             */
-/*   Updated: 2023/09/25 11:04:58 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/25 11:17:32 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	ft_unset(char **args, t_env **envp)
 	t_env	*tmp_last;
 
 	tmp_last = NULL;
+	if (!args)
+		return (1);
 	i = 0;
 	while (args[i])
 	{
