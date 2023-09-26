@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/25 10:37:12 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/26 11:32:26 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	ft_read_prompt(char **envp)
 	while (true)
 	{
 		str = readline(PROMPT);
-		if (!str || !ft_strcmp(str, "exit"))
+		if (!str || !ft_strncmp(str, "exit", 4))
 			ft_exit_minihell(str, env_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
