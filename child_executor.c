@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 18:09:50 by kiabdura          #+#    #+#             */
-/*   Updated: 2023/09/26 11:30:53 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/26 11:33:55 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,5 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		env_list->exit_status = exit_status;
 	}
 	env_list->exit_status = wait_for_child_processes(pids, &exit_status);
+	free(pids);
 }
