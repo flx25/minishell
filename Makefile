@@ -6,7 +6,7 @@
 #    By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/28 10:47:26 by fvon-nag          #+#    #+#              #
-#    Updated: 2023/09/21 09:28:26 by fvon-nag         ###   ########.fr        #
+#    Updated: 2023/09/26 15:52:41 by fvon-nag         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SOURCES = main.c \
 			piping.c \
 
 
+OBJECTS = $(SOURCES:.c=.o)
 NAME = minishell
 LIBFT = ./Libft/libft.a
 CC = cc
@@ -44,15 +45,15 @@ CFLAGS = -Wall -Wextra -Werror -g -I $(HOME)/goinfre/.brew/opt/readline/include/
 
 all: $(NAME)
 
-$(NAME): $(LIBFT)
-	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(SOURCES) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJECTS)
+	$(CC) $(CFLAGS) $(LIBFT) -L$(HOME)/goinfre/.brew/opt/readline/lib/ -lreadline $(OBJECTS) -o $(NAME)
 
 $(LIBFT):
 	make -C Libft
 
 clean:
 	make -C Libft clean
-
+	rm -f *.o
 fclean: clean
 	make fclean -C Libft
 	rm -rf $(NAME) minishell.dSYM
