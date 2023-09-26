@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/26 11:32:26 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/26 12:11:27 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,29 @@ void	ft_free_envlist(t_env **env_list)
 	}
 }
 
-void	ft_exit_minihell(char *str, t_env *env_list)
+void	ft_exit_minihell(t_cmds *cmd, t_env *env_list)
 {
-	tcsetattr(STDIN_FILENO, TCSANOW, &g_save_attr);
-	if (!str)
+	int	exitcode;
+
+	if (!cmd->args)
+		exitcode = 0;
+	else
 	{
-		rl_on_new_line();
-		rl_redisplay();
+		if (cmd->args[0] && ft_isdigit(cmd->args[0][0]))
+			exitcode = ft_atoi(cmd->args[0]);
+		else
+		{
+			exitcode = 0;
+			printf("minishell: exit: %s: numeric argument required\n",
+				cmd->args[0]);
+		}
 	}
-	free(str);
+	tcsetattr(STDIN_FILENO, TCSANOW, &g_save_attr);
+	ft_free_cmdlist(&cmd);
 	ft_free_envlist(&env_list);
 	write(1, "exit\n", 5);
 	clear_history();
-	exit(0);
+	exit(exitcode);
 }
 
 /* Used to display the prompt and read the input from the user */
@@ -86,8 +96,6 @@ int	ft_read_prompt(char **envp)
 	while (true)
 	{
 		str = readline(PROMPT);
-		if (!str || !ft_strncmp(str, "exit", 4))
-			ft_exit_minihell(str, env_list);
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;

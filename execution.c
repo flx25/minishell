@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 19:09:46 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/21 10:06:39 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/26 12:04:34 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	ft_execute_buildin(t_cmds *cmd, t_env **env_list)
 		return (ft_unset(cmd->args, env_list));
 	else if (!ft_strcmp(cmd->cmd, "echo"))
 		return (ft_echo(cmd->args));
+	else if (!ft_strcmp(cmd->cmd, "exit"))
+		ft_exit_minihell(cmd, *env_list);
 	return (0);
 }
 
