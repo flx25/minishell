@@ -65,34 +65,6 @@ void	execute_command(t_cmds *current_cmd, t_exec *exec_data,
 	rotator(exec_data);
 }
 
-//int	wait_for_child_processes(t_pidNODE *pids, int *exit_status)
-//{
-//	t_pidNODE	*temp;
-//	int			status;
-//
-//	while (pids != NULL)
-//	{
-//		waitpid(pids->pid, &status, 0);
-//		if (WIFEXITED(status))
-//		{
-//			*exit_status = WEXITSTATUS(status);
-//			return (*exit_status);
-//		}
-//		else if (WIFSIGNALED(status))
-//		{
-//			//INTERACTS WEIRLDY WITH CAT | CAT | LS
-//			printf("Child process %d terminated by signal %d\n",
-//				pids->pid, WTERMSIG(status));
-//			*exit_status = 128 + WTERMSIG(exit_status);
-//			return (*exit_status);
-//		}
-//		temp = pids;
-//		pids = pids->next;
-//		free(temp);
-//	}
-//	return (*exit_status);
-//}
-
 int	wait_for_child_processes(t_pidNODE	*pids, int	*exit_status)
 {
 	t_pidNODE	*temp;
