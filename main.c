@@ -6,7 +6,7 @@
 /*   By: fvon-nag <fvon-nag@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 18:42:45 by melkholy          #+#    #+#             */
-/*   Updated: 2023/09/26 12:11:27 by fvon-nag         ###   ########.fr       */
+/*   Updated: 2023/09/27 10:20:52 by fvon-nag         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	ft_read_prompt(char **envp)
 	while (true)
 	{
 		str = readline(PROMPT);
+		if (!str)
+			str = ft_strdup("exit");
 		add_history(str);
 		if (ft_closing_qoutes(str))
 			continue ;
