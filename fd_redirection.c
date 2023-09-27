@@ -21,7 +21,6 @@ void	ft_infile_fd(t_cmds *cmd)
 	if (access(cmd->from_file, F_OK | R_OK))
 	{
 		if (access(cmd->from_file, F_OK))
-			// g_term_attr.status = 1; --> exit code
 			printf("minihell: %s: %s\n", strerror(errno), cmd->from_file);
 	}
 	else
@@ -45,7 +44,6 @@ void	ft_outfile_fd(t_cmds *cmd, char *to_file, int redirect)
 	else if (!access(to_file, F_OK))
 	{
 		printf("minihell: %s: %s\n", strerror(errno), to_file);
-		//g_term_attr.status = 1; -> maybe need to replace with envp
 	}
 	else
 		cmd->output = open(to_file, O_RDWR | O_CREAT | flag, 0666);

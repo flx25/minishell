@@ -22,7 +22,7 @@ void	add_pid_to_list(pid_t pid, t_pidNODE **pids)
 	if (new_node == NULL)
 	{
 		perror("malloc");
-		exit(1); // Handle allocation failure as needed
+		exit(1);
 	}
 	new_node->pid = pid;
 	new_node->next = NULL;
@@ -76,9 +76,7 @@ int	wait_for_child_processes(t_pidNODE	*pids, int	*exit_status)
 		terminated_pid = waitpid(pids->pid, &status, 0);
 		if (terminated_pid == -1)
 		{
-			// Handle waitpid error if needed
 			perror("waitpid");
-			// Update exit_status accordingly or exit the program
 		}
 		else
 		{
@@ -115,5 +113,4 @@ void	executor(t_cmds *cmd, t_env *env_list)
 		env_list->exit_status = exit_status;
 	}
 	env_list->exit_status = wait_for_child_processes(pids, &exit_status);
-	//free(pids);
 }
