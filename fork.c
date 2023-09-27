@@ -24,9 +24,11 @@ void	dup2_and_close(int from, int to)
 
 static void	execute_command(t_cmds *cmd, t_env *env_list)
 {
-	execve(cmd->cmd, cmd->full_cmd,
-		ft_create_env_array(env_list));
-	perror(cmd->full_cmd[0]);
+	if (!access(cmd->cmd, X_OK))
+		execve(cmd->cmd, cmd->full_cmd,
+			ft_create_env_array(env_list));
+	else
+		printf("%s: command not found\n", cmd->cmd);
 }
 
 static void	dup_pipe(t_exec *exec_data)
